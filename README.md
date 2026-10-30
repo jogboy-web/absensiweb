@@ -1,182 +1,197 @@
-# Portal E-Presensi Ma'had Tahfidz Imam 'Ashim Yogyakarta
+# E-Presensi Ma'had Tahfidz Imam 'Ashim Yogyakarta
 
 ![Logo Lembaga](logo-clean.png)
 
-[![Live Demo](https://img.shields.io/badge/Demo-Cloudflare%20Pages-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://absensiweb-esy.pages.dev)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Cloudflare%20Pages-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://absensiweb-esy.pages.dev)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/jogboy-web/absensiweb)
 [![Release](https://img.shields.io/badge/Release-v1.0--submission-blue?style=for-the-badge)](https://github.com/jogboy-web/absensiweb/releases/tag/v1.0-submission)
 
-> **Sistem Informasi Manajemen Presensi Digital & Rekapitulasi Kehadiran Asatidz Berbasis Web Terintegrasi.**  
-> Dirancang khusus untuk memfasilitasi pencatatan kehadiran, monitoring halaqah, dan administrasi pesantren secara modern, akurat, dan transparan.
+---
+
+## 📋 Ringkasan Elemen Submission
+
+| Elemen README | Rangkuman Keterangan |
+| :--- | :--- |
+| **Project Name & Description** | E-Presensi Ma'had Tahfidz Imam 'Ashim Yogyakarta: Sistem informasi pencatatan dan monitoring kehadiran asatidz berbasis web. |
+| **Problem & Target User** | Mengatasi pencatatan presensi manual/kertas yang rentan hilang; ditujukan untuk Asatidz dan Administrator Ma'had. |
+| **Key Features** | Multi-role Auth, Digital Clock Realtime, Logging Presensi Asatidz, Dashboard Admin Terpusat, & Local Database. |
+| **Tech Stack** | HTML5, CSS3 Modern, Vanilla ES6+ JavaScript, LocalStorage Engine, Cloudflare Pages Edge CDN. |
+| **AI Implementation** | Google DeepMind Gemini (via Antigravity / `agy` CLI Agent) untuk otomasi CI/CD, deployment Cloudflare, dan sanitasi berkas. |
+| **Run Instructions** | Buka langsung `index.html` pada browser atau jalankan lewat local server `python -m http.server 8080`. |
+| **Architecture / Data Flow** | Alur autentikasi berbasis role dan modul client-side persistence terstruktur. |
+| **Deployment URL** | [https://absensiweb-esy.pages.dev](https://absensiweb-esy.pages.dev) |
+| **Team Members** | Ibrohim (`jogboy-web`) - Fullstack Developer & Project Lead. |
+| **Known Limitations** | Penyimpanan aktif berbasis LocalStorage per browser; geofencing GPS masih opsional. |
+| **Third-party Resources** | Google Fonts (*Plus Jakarta Sans*, *Amiri*), Cloudflare Pages, GitHub. |
 
 ---
 
-## 📌 Daftar Isi
-1. [Tautan Cepat & Akses Publik](#-tautan-cepat--akses-publik)
-2. [Isi Minimum Repository (Checklist Submission)](#-isi-minimum-repository-checklist-submission)
-3. [Fitur Utama Aplikasi](#-fitur-utama-aplikasi)
-4. [Struktur Folder & Source Code](#-struktur-folder--source-code)
-5. [Panduan Instalasi & Menjalankan Aplikasi](#-panduan-instalasi--menjalankan-aplikasi)
-6. [Konfigurasi Environment (.env.example)](#-konfigurasi-environment-envexample)
-7. [Dokumentasi Antarmuka (UI/UX)](#-dokumentasi-antarmuka-uiux)
-8. [AI & Technology Disclosure](#-ai--technology-disclosure)
+## 1. 📖 Project Name & Description
+* **Nama Proyek:** E-Presensi Ma'had Tahfidz Imam 'Ashim Yogyakarta
+* **Deskripsi:**  
+  Platform sistem informasi manajemen presensi digital dan monitoring kehadiran harian asatidz/pengajar berbasis web yang dirancang khusus untuk lingkungan pesantren tahfidz Al-Qur'an. Aplikasi ini menyederhanakan proses absensi pengajar halaqah secara cepat, akurat, dan transparan melalui antarmuka responsif bernuansa Islami modern.
 
 ---
 
-## 🔗 Tautan Cepat & Akses Publik
+## 2. 🎯 Problem & Target User
 
-* **Live Website (Cloudflare Pages):** [https://absensiweb-esy.pages.dev](https://absensiweb-esy.pages.dev)
-* **Repositori GitHub:** [https://github.com/jogboy-web/absensiweb](https://github.com/jogboy-web/absensiweb)
-* **Tag Submission:** [`v1.0-submission`](https://github.com/jogboy-web/absensiweb/tree/v1.0-submission)
-* **Commit Hash Submission:** `8d7fc642dd1868fbfe4e150a2a4bbc1357bb8016`
-* **Release Resmi:** [GitHub Releases v1.0-submission](https://github.com/jogboy-web/absensiweb/releases/tag/v1.0-submission)
+### Masalah yang Dihadapi (*Problem Statement*):
+1. **Inefisiensi Presensi Manual:** Penggunaan buku presensi kertas rentan sobek, hilang, dan memakan waktu saat proses rekapitulasi bulanan.
+2. **Ketiadaan Data Real-Time:** Pimpinan dan pengurus ma'had kesulitan memantau kehadiran asatidz pada sesi halaqah pagi, sore, dan malam secara langsung.
+3. **Validitas & Transparansi:** Risiko duplikasi atau pencatatan presensi yang tidak terverifikasi tanpa adanya sistem otentikasi kelembagaan.
 
----
-
-## ✅ Isi Minimum Repository (Checklist Submission)
-
-Sesuai dengan ketentuan submission kompetisi, repositori ini memuat seluruh komponen wajib:
-
-- [x] **Source Code Aplikasi**: Berkas lengkap HTML, CSS, JavaScript, dan aset grafis siap pakai.
-- [x] **README.md**: Panduan komprehensif struktur, instruksi pengoperasian, dan fitur.
-- [x] **`.env.example`**: Berkas template konfigurasi environment bersih tanpa secret/API key asli.
-- [x] **Dokumentasi / Screenshot**: Penjelasan arsitektur antarmuka dan visualisasi sistem.
-- [x] **AI & Technology Disclosure**: Pernyataan transparansi penggunaan kecerdasan buatan & stack teknologi ([klik di sini](#-ai--technology-disclosure)).
+### Pengguna yang Dituju (*Target User*):
+1. **Asatidz / Ustadz:** Mencatatkan kehadiran harian (Hadir, Izin, Sakit, Tugas Lembaga) secara mandiri dari perangkat ponsel/laptop dengan cepat.
+2. **Administrator / Pengurus Pesantren:** Mengontrol audit log harian, mengelola data asatidz, menyaring absensi, dan merekap data kehadiran secara terpusat.
+3. **Pimpinan Lembaga:** Memantau kedisiplinan dan konsistensi pengajaran asatidz sebagai bahan evaluasi manajemen pesantren.
 
 ---
 
-## 🌟 Fitur Utama Aplikasi
+## 3. ⚡ Key Features (Fitur Utama yang Berfungsi)
 
-### 1. Sistem Autentikasi Multi-Peran (Role-Based Access)
-- **Portal Asatidz/Ustadz:** Login menggunakan username/password resmi dengan proteksi kode registrasi lembaga (`MTIA2026`).
-- **Portal Administrator:** Dashboard rekapitulasi data kehadiran terpusat, audit log asatidz, dan laporan harian.
-
-### 2. Digital E-Presensi Realtime
-- Jam digital presisi tinggi WIB dengan integrasi tanggal kalender resmi.
-- Sistem pencatatan status kehadiran: Hadir Tepat Waktu, Izin, Sakit, atau Dinas Luar.
-- Proteksi duplikasi entri presensi per sesi/hari.
-
-### 3. Database Mandiri & Tangguh (Client-Side Persistence)
-- Menggunakan modul `local-db.js` yang memanfaatkan penyimpanan `localStorage` terstruktur.
-- Menjamin aplikasi tetap berfungsi optimal dalam kondisi jaringan minim/offline (PWA-ready architecture).
-
-### 4. Desain Responsif Berkarakter Islami Modern
-- Tipografi elegan kombinasi *Plus Jakarta Sans* (keterbacaan modern) dan *Amiri* (aksen kaligrafi Arab).
-- Skema palet warna khas kelembagaan: *Emerald Green*, *Royal Gold*, dan *Clean White*.
-- Aksesibilitas penuh pada perangkat smartphone, tablet, maupun layar desktop.
-
----
-
-## 📂 Struktur Folder & Source Code
-
-```text
-├── index.html              # Halaman gerbang utama / portal login & registrasi asatidz
-├── login.html              # Halaman otentikasi login alternatif
-├── dashboard-ustadz.html   # Antarmuka presensi mandiri dan rekap kehadiran ustadz
-├── dashboard-admin.html    # Antarmuka panel admin, audit log, & data master presensi
-├── script.js               # Logika controller aplikasi, validasi form, & event handlers
-├── local-db.js             # Engine database lokal (LocalStorage CRUD manager)
-├── style.css               # Desain UI, tema warna gold-emerald, layout flex/grid
-├── logo-clean.png          # Aset grafis logo utama resolusi tinggi
-├── logo-transparent.png    # Aset logo transparan
-├── logo.jpeg               # Favicon & thumbnail lembaga
-├── .env.example            # Template konfigurasi environment (bebas dari secrets)
-├── .gitignore              # Daftar file temporary build yang diabaikan Git
-└── README.md               # Dokumentasi utama proyek
-```
+- [x] **Autentikasi Multi-Peran (Multi-Role Authentication):**
+  - Pemisahan portal akses untuk **Asatidz** dan **Administrator**.
+  - Pendaftaran akun asatidz terlindungi oleh *Passcode Lembaga Resmi* (`MTIA2026`).
+- [x] **Real-Time Clock & Kalender Dinamis:**
+  - Penunjuk waktu presisi digital WIB dan tanggal dinamis untuk menjamin validitas sesi waktu absensi.
+- [x] **Pencatatan Presensi Digital Asatidz:**
+  - Opsi status kehadiran lengkap: *Hadir*, *Izin*, *Sakit*, dan *Tugas Luar/Dinas*.
+  - Pencegahan penginputan ganda (*duplicate submission prevention*) per sesi.
+- [x] **Dashboard Khusus Asatidz (`dashboard-ustadz.html`):**
+  - Kartu statistik kehadiran pribadi, riwayat absensi mandiri, dan status halaqah.
+- [x] **Dashboard Administrator (`dashboard-admin.html`):**
+  - Monitoring seluruh presensi asatidz dalam satu tabel terpusat.
+  - Fitur pencarian nama asatidz dan penyaringan berdasarkan status kehadiran.
+- [x] **Penyimpanan Mandiri Tangguh (High-Availability Client Persistence):**
+  - Bekerja secara instan tanpa ketergantungan server eksternal berkat modul `local-db.js`.
+- [x] **Desain Responsif & Estetika Islami Modern:**
+  - Didukung tipografi *Plus Jakarta Sans* dan aksen *Amiri*, dengan skema warna *Emerald Green* & *Royal Gold*.
 
 ---
 
-## 🚀 Panduan Instalasi & Menjalankan Aplikasi
+## 4. 🛠️ Tech Stack
 
-Karena aplikasi ini dibangun dengan arsitektur web modern yang mandiri, tidak diperlukan kompilasi runtime yang rumit.
+* **Frontend:**
+  - Semantic HTML5
+  - Modern CSS3 (CSS Custom Variables, Flexbox, CSS Grid)
+  - Vanilla JavaScript (ES6+ Native, No Heavy Framework Dependency)
+* **Backend / Storage Engine:**
+  - Client-side Web Storage API (`localStorage`) melalui abstraksi controller `local-db.js`.
+  - Arsitektur modular siap dihubungkan ke REST API / Cloudflare Workers / Supabase.
+* **Hosting & Deployment:**
+  - **Cloudflare Pages** (Global Edge CDN Network, HTTPS otomatis, Fast Edge Delivery).
+* **Version Control & CI/CD:**
+  - **Git & GitHub** untuk source code management, semantic tagging, dan releases.
 
-### Opsi 1: Menjalankan Langsung di Browser (Offline / Local)
-1. Kloning repositori ini ke komputer Anda:
+---
+
+## 5. 🤖 AI Implementation (Implementasi AI & Metodologi)
+
+Proyek ini memanfaatkan teknologi kecerdasan buatan (*Artificial Intelligence*) secara terarah dan bertanggung jawab untuk mempercepat siklus rekayasa perangkat lunak:
+
+* **Model & Alat AI:** Google DeepMind Gemini yang diorkestrasi melalui **Antigravity (`agy` CLI) Autonomous AI Agent**.
+* **Fungsi & Peranan AI:**
+  1. **Automated CI/CD & Cloud Deployment:** AI Agent mengotomasi pembuatan repositori GitHub melalui REST API, mengatur branch & commit, serta mendeploy langsung ke Cloudflare Pages menggunakan Wrangler CLI.
+  2. **Code Structure Optimization & Scaffolding:** Membantu penyusunan abstraksi modular pada file JavaScript serta standarisasi template environment `.env.example`.
+  3. **Quality Assurance & Security Screening:** Memverifikasi integritas repositori dan memastikan tidak ada secret/token yang bocor ke publik.
+* **Integritas Penulisan:** Seluruh alur logika bisnis presensi, aturan peran asatidz, konten kurikulum pesantren, serta desain tema Islami dirancang dan diverifikasi secara langsung oleh pengembang manusia.
+
+---
+
+## 6. 💻 Run Instructions (Cara Menjalankan Proyek)
+
+Proyek ini dirancang *zero-configuration* sehingga dapat dijalankan secara instan tanpa proses *build* atau instalasi dependensi yang rumit.
+
+### Opsi A: Langsung Menggunakan Web Browser (Metode Termudah)
+1. Kloning repositori GitHub:
    ```bash
    git clone https://github.com/jogboy-web/absensiweb.git
    cd absensiweb
    ```
-2. Buka berkas `index.html` langsung dengan peramban favorit Anda (Google Chrome, Mozilla Firefox, Edge, Safari).
+2. Klik dua kali atau buka berkas `index.html` menggunakan browser apa pun (Google Chrome, Firefox, Microsoft Edge, Safari).
 
-### Opsi 2: Menjalankan Menggunakan Local Web Server
-Untuk pengalaman optimal (bebas dari batasan protokol `file://`):
+### Opsi B: Menggunakan Local HTTP Server
+Jika ingin menjalankan simulasi server lokal:
 ```bash
-# Menggunakan Python 3
+# Menggunakan Python 3:
 python -m http.server 8080
 
-# Menggunakan Node.js npx serve
+# ATAU menggunakan Node.js:
 npx serve .
 ```
-Lalu akses melalui browser di `http://localhost:8080`.
+Buka peramban pada alamat: `http://localhost:8080`.
 
 ---
 
-## ⚙️ Konfigurasi Environment (`.env.example`)
+## 🏗️ Architecture / Data Flow (Alur Sistem)
 
-Untuk deployment yang membutuhkan integrasi backend atau Cloudflare API, file contoh telah disediakan di `.env.example`:
-
-```env
-# Konfigurasi Aplikasi
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://absensiweb-esy.pages.dev
-
-# Kode Registrasi Lembaga
-REGISTRATION_PASSCODE=MTIA2026
-
-# Konfigurasi Cloudflare Pages (Opsional)
-CLOUDFLARE_ACCOUNT_ID=your_account_id_placeholder
-CLOUDFLARE_API_TOKEN=your_api_token_placeholder
-
-# Database Eksternal (Opsional)
-DATABASE_URL=
-SUPABASE_URL=https://your-project-id.supabase.co
-SUPABASE_ANON_KEY=your_anon_key_placeholder
+```
+[ Pengguna: Asatidz / Admin ]
+               │
+               ▼
+      [ Halaman index.html ]
+               │
+   ┌───────────┴───────────┐
+   ▼                       ▼
+[ Form Registrasi ]    [ Form Login ]
+(Validasi Passcode)    (Verifikasi Kredensial)
+   │                       │
+   └───────────┬───────────┘
+               ▼
+     [ local-db.js Engine ]
+               │
+   ┌───────────┴───────────┐
+   ▼                       ▼
+[ LocalStorage Users ]  [ LocalStorage Attendance ]
+               │
+   ┌───────────┴───────────┐
+   ▼                       ▼
+[ Dashboard Ustadz ]   [ Dashboard Admin ]
+(Input & Cek Presensi) (Rekapitulasi & Filter)
 ```
 
-> [!NOTE]
-> File `.env.example` **tidak memuat rahasia atau API key aktif**. Semua data bersifat placeholder untuk keperluan standarisasi pengumpulan karya.
+1. **Autentikasi:** Pengguna memasukkan kredensial; pendaftar baru diverifikasi dengan kode `MTIA2026`.
+2. **Controller (`local-db.js`):** Memvalidasi format data dan menyimpan state ke storage peramban.
+3. **Routing Sederhana:** Mengarahkan akun sesuai role: asatidz ke `dashboard-ustadz.html` dan administrator ke `dashboard-admin.html`.
+4. **Logging & Query:** Setiap presensi disimpan lengkap dengan timestamp WIB, status kehadiran, dan identitas asatidz.
 
 ---
 
-## 📸 Dokumentasi Antarmuka (UI/UX)
+## 🌐 Deployment URL
 
-| Tampilan Portal | Deskripsi Fungsi |
-| :--- | :--- |
-| **Portal Autentikasi (`index.html`)** | Pintu masuk asatidz dan admin dengan jam digital real-time dan validasi kode lembaga. |
-| **Dashboard Asatidz (`dashboard-ustadz.html`)** | Formulir pencatatan absensi harian, kartu ringkasan status kehadiran, dan riwayat presensi. |
-| **Dashboard Administrator (`dashboard-admin.html`)** | Panel kontrol untuk melihat seluruh rekap kehadiran asatidz, penyaringan data, dan ekspor data. |
+Aplikasi telah teruji dan aktif secara publik pada infrastruktur Cloudflare Pages:
 
-Aset grafis pendukung antarmuka:
-- `logo-clean.png` : Identitas Ma'had Tahfidz Imam 'Ashim Yogyakarta.
-- `logo-transparent.png` : Aset ikonik transparan untuk header dan badge.
+* **Situs Produksi:** [https://absensiweb-esy.pages.dev](https://absensiweb-esy.pages.dev)
+* **GitHub Repository:** [https://github.com/jogboy-web/absensiweb](https://github.com/jogboy-web/absensiweb)
+* **Submission Release:** [Release v1.0-submission](https://github.com/jogboy-web/absensiweb/releases/tag/v1.0-submission)
 
 ---
 
-## 🤖 AI & Technology Disclosure
+## 👥 Team Members
 
-Sebagai bentuk transparansi akademik, integritas profesional, dan kepatuhan terhadap regulasi kompetisi, berikut adalah rincian peran teknologi kecerdasan buatan (*AI*) dan stack rekayasa yang digunakan dalam proyek ini:
-
-### 1. Model & Tooling AI yang Digunakan
-- **Model / Agen AI:** Google DeepMind Gemini (via Antigravity / `agy` CLI Agent).
-- **Peran AI Agent:**
-  - **Otomasi Alur Deployment:** Membantu eksekusi Git workflow (versioning tag `v1.0-submission`, commit hygiene, dan manajemen repositori).
-  - **Infrastruktur Cloud:** Mengotomasi integrasi dan deployment static asset ke jaringan global Cloudflare Pages melalui Cloudflare Wrangler API.
-  - **Refactoring & Dokumentasi:** Membantu perapian struktur README, penulisan `.env.example`, dan standarisasi checklist submission.
-
-### 2. Kode Sumber & Logika Bisnis (Human Authorship)
-- Logika aturan presensi santri dan asatidz, alur pembagian hak akses, desain tematik islami (CSS/HTML), serta struktur penyimpanan database lokal dirancang dan ditentukan oleh pengembang manusia berdasarkan kebutuhan nyata Ma'had Tahfidz Imam 'Ashim Yogyakarta.
-- Seluruh kode yang dihasilkan atau dioptimalkan telah melalui penelaahan (*human review*), validasi fungsional, dan pengujian langsung.
-
-### 3. Teknologi Inti (Tech Stack)
-- **Frontend:** Semantic HTML5, CSS3 Custom Properties (Modern CSS Variables, Flexbox, CSS Grid), Vanilla ES6+ JavaScript.
-- **Data Engine:** HTML5 Web Storage API (`localStorage`) dengan abstraksi CRUD asinkron.
-- **Hosting & CDN:** Cloudflare Pages Global Edge Network.
-- **Version Control:** Git & GitHub.
+* **Ibrohim (`jogboy-web`)** — *Project Lead & Fullstack Developer*
+  - Bertanggung jawab atas arsitektur sistem, desain antarmuka, penulisan kode JavaScript, dan implementasi deployment.
+* **Tim Ma'had Tahfidz Imam 'Ashim Yogyakarta** — *Product Owner & Domain Experts*
+  - Bertanggung jawab atas validasi kebutuhan presensi asatidz dan standarisasi operasional pesantren.
 
 ---
 
-## 📄 Lisensi
-Hak Cipta © 2026 **Ma'had Tahfidz Imam 'Ashim Yogyakarta**.  
-Dikembangkan untuk keperluan sistem administrasi lembaga dan submission kompetisi resmi.
+## ⚠️ Known Limitations (Batasan MVP Saat Ini)
+
+1. **Storage Terisolasi per Perangkat:** Saat ini basis data menggunakan `localStorage` per browser, sehingga sinkronisasi data antarperangkat yang berbeda memerlukan penyambungan ke database cloud (seperti Supabase/Cloudflare D1).
+2. **Validasi Lokasi Fisik (Geofencing):** Verifikasi kehadiran saat ini berbasis kepemilikan kode akses lembaga dan pencatatan waktu realtime, belum menyertakan radius koordinat GPS otomatis.
+3. **Laporan Cetak:** Fitur ekspor laporan saat ini mengandalkan fungsi *Print to PDF* bawaan peramban.
+
+---
+
+## 📚 Third-party Resources & Credits
+
+* **Tipografi:** Google Fonts — [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans) & [Amiri](https://fonts.google.com/specimen/Amiri).
+* **Infrastruktur Cloud:** [Cloudflare Pages](https://pages.cloudflare.com/) untuk static hosting dan global edge caching.
+* **Development Agent:** Google DeepMind Gemini via Antigravity AGY CLI.
+* **Identitas Visual:** Logo resmi Ma'had Tahfidz Imam 'Ashim Yogyakarta.
+
+---
+
+## 📄 Lisensi & Hak Cipta
+Hak Cipta © 2026 **Ma'had Tahfidz Imam 'Ashim Yogyakarta & Ibrohim**. Seluruh hak cipta dilindungi undang-undang.
