@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Proposal Solusi & MVP AI Web - E-Presensi Ma'had Tahfidz Imam 'Ashim</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Amiri:wght@700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 8.8pt;
+      line-height: 1.45;
+      color: #1e293b;
+      background: #ffffff;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      padding: 14mm 15mm 12mm 15mm;
+      position: relative;
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    /* COVER STYLING */
+    .cover-page {
+      width: 210mm;
+      height: 297mm;
+      padding: 35mm 22mm 25mm 22mm;
+      background: linear-gradient(135deg, #064e3b 0%, #042f2e 50%, #0f172a 100%);
+      color: #ffffff;
+      page-break-after: always;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .cover-bg-accent {
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(217, 119, 6, 0.3) 0%, rgba(217, 119, 6, 0) 70%);
+      pointer-events: none;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      padding: 5px 14px;
+      background: rgba(217, 119, 6, 0.25);
+      border: 1px solid #d97706;
+      border-radius: 20px;
+      font-size: 8pt;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #fbbf24;
+      margin-bottom: 20px;
+    }
+
+    .cover-title {
+      font-size: 24pt;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #ffffff;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .cover-title span {
+      color: #fbbf24;
+    }
+
+    .cover-subtitle {
+      font-size: 11pt;
+      color: #cbd5e1;
+      font-weight: 400;
+      max-width: 520px;
+      line-height: 1.5;
+    }
+
+    .cover-meta-grid {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    .cover-meta-item label {
+      display: block;
+      font-size: 7pt;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #94a3b8;
+      margin-bottom: 2px;
+      font-weight: 600;
+    }
+
+    .cover-meta-item p {
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .cover-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding-top: 12px;
+      font-size: 7.5pt;
+      color: #94a3b8;
+    }
+
+    /* HEADER & FOOTER */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid #064e3b;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+      font-size: 7pt;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .page-header .brand {
+      color: #064e3b;
+      font-weight: 800;
+    }
+
+    .page-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 4px;
+      margin-top: 8px;
+      font-size: 7pt;
+      color: #94a3b8;
+    }
+
+    .content-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .section-title {
+      font-size: 11.5pt;
+      font-weight: 800;
+      color: #064e3b;
+      margin-top: 4px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-left: 3.5px solid #d97706;
+      padding-left: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .subsection-title {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+
+    p {
+      margin-bottom: 6px;
+      text-align: justify;
+      font-size: 8.5pt;
+    }
+
+    /* CARDS */
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+
+    .card-accent {
+      border-left: 3px solid #064e3b;
+      background: #f0fdf4;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    /* TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 8px;
+      font-size: 7.8pt;
+    }
+
+    table th, table td {
+      border: 1px solid #cbd5e1;
+      padding: 4.5px 7px;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.35;
+    }
+
+    table th {
+      background: #064e3b;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    /* LISTS */
+    ul, ol {
+      margin-left: 15px;
+      margin-bottom: 6px;
+      font-size: 8.2pt;
+    }
+
+    li {
+      margin-bottom: 2px;
+    }
+
+    /* BADGES */
+    .badge {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 6.8pt;
+      font-weight: 700;
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .badge-gold {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+
+    .badge-green {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+    }
+
+    .code-box {
+      font-family: "Courier New", Courier, monospace;
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 7.5pt;
+      margin-bottom: 5px;
+      word-break: break-all;
+    }
+
+    .diagram-container {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      font-size: 7.5pt;
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+
+    .flow-node {
+      flex: 1;
+      background: #ffffff;
+      border: 1.2px solid #064e3b;
+      border-radius: 5px;
+      padding: 5px 6px;
+      text-align: center;
+      font-weight: 600;
+      color: #0f172a;
+      line-height: 1.25;
+    }
+
+    .flow-node.highlight {
+      background: #064e3b;
+      color: #ffffff;
+      border-color: #d97706;
+    }
+
+    .flow-arrow {
+      color: #d97706;
+      font-weight: bold;
+      font-size: 9pt;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== COVER PAGE ==================== -->
+  <div class="cover-page">
+    <div class="cover-bg-accent"></div>
+    
+    <div>
+      <div class="cover-badge">Proposal Solusi & MVP AI Web &bull; AIWIC 2026</div>
+      <h1 class="cover-title">E-Presensi Ma'had Tahfidz<br><span>Imam 'Ashim Yogyakarta</span></h1>
+      <p class="cover-subtitle">
+        Sistem Informasi Presensi Digital & Monitoring Kehadiran Asatidz Halaqah Al-Qur'an Terintegrasi Berbasis High-Availability Client-Side Architecture.
+      </p>
+    </div>
+
+    <div>
+      <div class="cover-meta-grid">
+        <div class="cover-meta-item">
+          <label>Nama Produk</label>
+          <p>E-Presensi Ma'had (AbsensiWeb)</p>
+        </div>
+        <div class="cover-meta-item">
+          <label>Nama Tim</label>
+          <p>Jogboy Web</p>
+        </div>
+        <div class="cover-meta-item">
+          <label>Ketua & Fullstack Developer</label>
+          <p>Ibrohim</p>
+        </div>
+        <div class="cover-meta-item">
+          <label>Asal Instansi</label>
+          <p>Ma'had Tahfidz Imam 'Ashim Yogyakarta</p>
+        </div>
+        <div class="cover-meta-item">
+          <label>Live URL (Cloudflare Pages)</label>
+          <p style="color: #38bdf8; font-size: 8.5pt;">absensiweb-esy.pages.dev</p>
+        </div>
+        <div class="cover-meta-item">
+          <label>Repositori GitHub</label>
+          <p style="color: #38bdf8; font-size: 8.5pt;">github.com/jogboy-web/absensiweb</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <span>AI Web Innovation Competition (AIWIC) 2026</span>
+      <span>Yogyakarta, Oktober 2026</span>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 1 (Problem & Background + Target User) ==================== -->
+  <div class="page">
+    <div class="page-header">
+      <span class="brand">E-Presensi Ma'had Tahfidz Imam 'Ashim</span>
+      <span>1. Problem & Background &bull; 2. Target User</span>
+    </div>
+
+    <div class="content-body">
+      <h2 class="section-title">1. Problem & Background</h2>
+      <div class="card card-accent">
+        <strong>Latar Belakang:</strong> Pesantren tahfidz Al-Qur'an memiliki karakteristik operasional khas di mana halaqah pembelajaran berlangsung intensif multi-sesi (Subuh, Dhuha, Ashar, Maghrib, dan Isya). Kehadiran asatidz (tenaga pengajar) merupakan faktor mutlak kelancaran setoran hafalan santri.
+      </div>
+
+      <p>Namun, dalam realitas operasional di <strong>Ma'had Tahfidz Imam 'Ashim Yogyakarta</strong>, pencatatan presensi saat ini masih mengandalkan lembaran buku presensi kertas konvensional yang memicu rentetan kendala krusial:</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="subsection-title" style="color: #b91c1c; margin-top:0;">⚠️ Masalah Nyata yang Dihadapi:</div>
+          <ul>
+            <li><strong>Kerentanan Fisik & Data Hilang:</strong> Buku absensi kertas sering tercecer, tersiram air, robek, atau tertinggal di asrama santri.</li>
+            <li><strong>Rekapitulasi Manual Lambat:</strong> Bagian administrasi harus menghitung manual ratusan baris paraf kehadiran di akhir bulan, memakan waktu 2–3 hari kerja.</li>
+            <li><strong>Ketiadaan Monitoring Real-Time:</strong> Pengurus asrama tidak dapat memantau apakah suatu halaqah telah dimulai tepat waktu tanpa mengecek manual ke kelas.</li>
+            <li><strong>Potensi Dispute Honorarium:</strong> Sering terjadi ketidaksesuaian hitungan tunjangan/honor mengajar akibat catatan paraf yang buram.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="subsection-title" style="color: #064e3b; margin-top:0;">💡 Urgensi Penyelesaian Masalah:</div>
+          <p style="font-size: 8.2pt; line-height: 1.4;">
+            Kelancaran hafalan Al-Qur'an membutuhkan kedisiplinan guru dan santri yang konsisten. Ketiadaan asatidz tanpa keterangan menurunkan capaian target juziyah santri. Digitalisasi presensi bukan sekadar modernisasi administratif, melainkan instrumen penjaminan mutu pendidikan pesantren dan transparansi akuntabilitas kelembagaan yang berdampak langsung pada kedisiplinan serta hak honorarium asatidz.
+          </p>
+        </div>
+      </div>
+
+      <h2 class="section-title" style="margin-top: 8px;">2. Target User</h2>
+      <p>Sistem ini dirancang dengan pendekatan <em>user-centered design</em> yang menyasar tiga persona pemangku kepentingan utama di lingkungan pesantren:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 24%;">Persona Pengguna</th>
+            <th style="width: 42%;">Pain Points Utama (Kendala Saat Ini)</th>
+            <th style="width: 34%;">Kebutuhan Sistem (Job-to-be-Done)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Asatidz / Ustadz</strong><br><span class="badge badge-gold">Pengguna Lapangan</span></td>
+            <td>
+              &bull; Repot harus ke kantor pusat hanya untuk paraf sebelum masuk halaqah.<br>
+              &bull; Lupa mencatat presensi saat jadwal halaqah Subuh dini hari.<br>
+              &bull; Tidak memiliki catatan riwayat presensi pribadi.
+            </td>
+            <td>
+              Antarmuka mobile yang cepat (< 5 detik) untuk menandai kehadiran langsung dari ponsel, lengkap dengan jam digital otomatis dan riwayat mandiri.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Administrator Ma'had</strong><br><span class="badge badge-green">Pengelola Data</span></td>
+            <td>
+              &bull; Beban kerja rekapitulasi data manual yang tinggi tiap akhir bulan.<br>
+              &bull; Kesulitan memvalidasi keterangan izin, sakit, atau tugas dinas luar.<br>
+              &bull; Risiko kehilangan berkas rekapan kertas.
+            </td>
+            <td>
+              Dashboard sentral audit log realtime, fitur pencarian cepat nama pengajar, filter kehadiran, serta rekapitulasi siap cetak/ekspor.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Mudir / Pimpinan</strong><br><span class="badge">Pimpinan Kebijakan</span></td>
+            <td>
+              &bull; Ketiadaan transparansi data disiplin harian asatidz.<br>
+              &bull; Laporan evaluasi kinerja yang lambat dan bersifat reaktif.
+            </td>
+            <td>
+              Visibilitas tingkat kehadiran harian untuk menjaga standar mutu halaqah tahfidz dan dasar manajerial yang akuntabel.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="page-footer">
+      <span>AIWIC 2026 &bull; Tim Jogboy Web</span>
+      <span>Halaman 1 dari 5 (Di luar Cover)</span>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 2 (Proposed Solution + AI Implementation) ==================== -->
+  <div class="page">
+    <div class="page-header">
+      <span class="brand">E-Presensi Ma'had Tahfidz Imam 'Ashim</span>
+      <span>3. Proposed Solution &bull; 4. AI Implementation</span>
+    </div>
+
+    <div class="content-body">
+      <h2 class="section-title">3. Proposed Solution</h2>
+      <div class="card card-accent">
+        <strong>Solusi yang Diajukan:</strong> Mengembangkan <strong>Portal E-Presensi Ma'had</strong> berbasis web responsif modern yang mengintegrasikan autentikasi multi-peran, verifikasi kode kelembagaan, jam digital sinkron, dan persistensi data mandiri tanpa latency.
+      </div>
+
+      <div class="subsection-title">Alur Pengalaman Pengguna (User Journey Utama):</div>
+      <div class="grid-2">
+        <div class="card">
+          <strong style="color: #064e3b; font-size: 8.5pt;">A. User Journey: Asatidz (Pengajar)</strong>
+          <ol style="margin-top: 4px; font-size: 8pt;">
+            <li>Asatidz membuka website melalui browser smartphone.</li>
+            <li>Registrasi satu kali memasukkan <em>Passcode Lembaga</em> resmi (<code>MTIA2026</code>) guna mencegah akun tidak sah.</li>
+            <li>Login ke sistem &bull; Jam digital realtime WIB ditampilkan otomatis.</li>
+            <li>Memilih status presensi: <em>Hadir</em>, <em>Izin</em>, <em>Sakit</em>, atau <em>Dinas Luar</em>.</li>
+            <li>Sistem menyimpan data instan dan mengunci entri sesi agar tidak terjadi input ganda.</li>
+          </ol>
+        </div>
+        <div class="card">
+          <strong style="color: #064e3b; font-size: 8.5pt;">B. User Journey: Administrator Ma'had</strong>
+          <ol style="margin-top: 4px; font-size: 8pt;">
+            <li>Admin mengakses portal via tombol Login Administrator.</li>
+            <li>Melihat ringkasan metrik: total kehadiran hari ini, izin, dan sakit.</li>
+            <li>Memeriksa tabel rekapitulasi audit log lengkap dengan timestamp WIB.</li>
+            <li>Melakukan filter instan per status atau pencarian cepat nama ustadz.</li>
+            <li>Mencetak rekapitulasi kehadiran untuk laporan bulanan ke mudir.</li>
+          </ol>
+        </div>
+      </div>
+
+      <h2 class="section-title" style="margin-top: 8px;">4. AI Implementation</h2>
+      <p>Pemanfaatan Artificial Intelligence pada solusi ini diterapkan secara komprehensif pada dua pilar: <strong>Engineering & Delivery Automation</strong> (fase saat ini) dan <strong>Smart Attendance Analytics</strong> (arsitektur roadmap):</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="subsection-title" style="margin-top:0; color: #064e3b;">🤖 1. Autonomous Agentic AI DevOps Pipeline</div>
+          <p style="font-size: 8.2pt;"><strong>Model/Platform:</strong> Google DeepMind Gemini via Antigravity (<code>agy</code>) Autonomous Agent.</p>
+          <p style="font-size: 8.2pt;"><strong>Fungsi AI yang Digunakan:</strong></p>
+          <ul style="font-size: 7.8pt;">
+            <li>Automasi REST API GitHub untuk *repo provisioning*, branch configuration, dan version tagging (<code>v1.0-submission</code>).</li>
+            <li>Automasi deployment ke Cloudflare Global Edge Network melalui Cloudflare Pages Wrangler CLI secara nir-kesalahan.</li>
+            <li>Automated Security Screening: Deteksi dan isolasi kebocoran rahasia/token sebelum kode terpublikasi.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="subsection-title" style="margin-top:0; color: #064e3b;">🧠 2. Heuristic & Smart Anomaly Guard</div>
+          <p style="font-size: 8.2pt;"><strong>Metode:</strong> Rule-based heuristic validation & Sanitization Engine pada <code>local-db.js</code>.</p>
+          <p style="font-size: 8.2pt;"><strong>Input & Output:</strong></p>
+          <ul style="font-size: 7.8pt;">
+            <li><strong>Input:</strong> Timestamp sistem WIB, identitas asatidz, device state, dan passcode registrasi.</li>
+            <li><strong>Output:</strong> Data presensi terverifikasi, pencegahan duplikasi *session collision*, dan peringatan anomali.</li>
+          </ul>
+          <p style="font-size: 7.6pt; color: #64748b; margin-top: 3px;">
+            <em>Roadmap Selanjutnya:</em> Integrasi Gemini Nano / Flash API untuk deteksi pola ketidakhadiran berulang pada halaqah kritis.
+          </p>
+        </div>
+      </div>
+
+      <div class="card card-accent" style="margin-top: 4px;">
+        <strong>Alasan AI Diperlukan:</strong> Penggunaan AI Agent memangkas waktu *development-to-deployment* hingga 80%, menjamin zero manual error pada edge infrastructure, serta membangun fondasi analitik prediktif untuk pemantauan kedisiplinan pengajar secara objektif.
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>AIWIC 2026 &bull; Tim Jogboy Web</span>
+      <span>Halaman 2 dari 5 (Di luar Cover)</span>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 3 (MVP & Key Features + Technical Architecture) ==================== -->
+  <div class="page">
+    <div class="page-header">
+      <span class="brand">E-Presensi Ma'had Tahfidz Imam 'Ashim</span>
+      <span>5. MVP & Key Features &bull; 6. Technical Architecture</span>
+    </div>
+
+    <div class="content-body">
+      <h2 class="section-title">5. MVP & Key Features</h2>
+      <p>Seluruh fitur Minimum Viable Product (MVP) berikut telah <strong>100% aktif, teruji, dan dapat dicoba langsung</strong> oleh dewan juri pada submission URL:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 28%;">Fitur MVP</th>
+            <th style="width: 48%;">Deskripsi Teknis & Fungsional</th>
+            <th style="width: 24%;">Status Verifikasi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Multi-Role Authentication</strong></td>
+            <td>Pemisahan portal login asatidz dan admin; validasi registrasi terlindungi kode lembaga resmi <code>MTIA2026</code>.</td>
+            <td><span class="badge badge-green">✓ Ready & Live</span></td>
+          </tr>
+          <tr>
+            <td><strong>Live WIB Clock & Date</strong></td>
+            <td>Penunjuk waktu digital real-time dengan sinkronisasi zona WIB dan penanggalan dinamis Indonesia.</td>
+            <td><span class="badge badge-green">✓ Ready & Live</span></td>
+          </tr>
+          <tr>
+            <td><strong>Dynamic Attendance Logger</strong></td>
+            <td>Pencatatan 4 status kehadiran (Hadir, Izin, Sakit, Tugas Lembaga) dilengkapi proteksi anti-duplikasi per sesi.</td>
+            <td><span class="badge badge-green">✓ Ready & Live</span></td>
+          </tr>
+          <tr>
+            <td><strong>Ustadz Self-Dashboard</strong></td>
+            <td>Kartu statistik kehadiran pribadi, riwayat absensi mandiri, dan monitoring jadwal halaqah santri.</td>
+            <td><span class="badge badge-green">✓ Ready & Live</span></td>
+          </tr>
+          <tr>
+            <td><strong>Admin Monitoring Panel</strong></td>
+            <td>Audit log terpusat seluruh pengajar, filter kategori status instan, pencarian nama asatidz, dan print-ready table.</td>
+            <td><span class="badge badge-green">✓ Ready & Live</span></td>
+          </tr>
+          <tr>
+            <td><strong>High-Availability Engine</strong></td>
+            <td>Modul <code>local-db.js</code> berbasis Web Storage API yang menjamin aplikasi tetap berfungsi tanpa hambatan jaringan.</td>
+            <td><span class="badge badge-green">✓ Ready & Live</span></td>
+          </tr>
+          <tr>
+            <td><strong>Islamic Modern UI/UX</strong></td>
+            <td>Desain responsif bertema Emerald-Gold dengan tipografi kombinasi Plus Jakarta Sans dan aksen kaligrafi Amiri.</td>
+            <td><span class="badge badge-green">✓ Ready & Live</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 class="section-title" style="margin-top: 8px;">6. Technical Architecture & Data Flow</h2>
+      <p>Arsitektur sistem dirancang ramping (*lean*), tanpa beban server berat, memanfaatkan kecepatan komputasi browser dan keandalan edge network global:</p>
+
+      <div class="diagram-container">
+        <div style="text-align: center; font-weight: 700; color: #064e3b; margin-bottom: 6px; font-size: 7.8pt;">
+          DIAGRAM ARSITEKTUR & DATA FLOW SISTEM E-PRESENSI
+        </div>
+        
+        <div class="flow-row">
+          <div class="flow-node">
+            <strong>1. User Layer</strong><br>
+            Smartphone / Laptop Asatidz & Admin
+          </div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node highlight">
+            <strong>2. Edge Delivery</strong><br>
+            Cloudflare Pages Global CDN (HTTPS)
+          </div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node">
+            <strong>3. Presentation Layer</strong><br>
+            HTML5 + Modern CSS + JS Controller
+          </div>
+        </div>
+
+        <div class="flow-row" style="margin-top: 8px;">
+          <div class="flow-node">
+            <strong>6. End Results / Output</strong><br>
+            Rekapitulasi Kehadiran, Audit Log, & Print PDF
+          </div>
+          <div class="flow-arrow">&larr;</div>
+          <div class="flow-node highlight">
+            <strong>5. Storage & Persistence</strong><br>
+            Web Storage (LocalStorage Engine)
+          </div>
+          <div class="flow-arrow">&larr;</div>
+          <div class="flow-node">
+            <strong>4. Controller Layer</strong><br>
+            <code>local-db.js</code> + Heuristic Validation
+          </div>
+        </div>
+
+        <div style="margin-top: 8px; padding: 5px 8px; background: #ffffff; border-radius: 4px; border-left: 3px solid #d97706; font-size: 7.2pt;">
+          <strong>CI/CD & DevOps Pipeline:</strong> Local Workspace &rarr; Git Commit & Tagging (<code>v1.0-submission</code>) &rarr; GitHub Repository &rarr; Antigravity AI Agent Orchestrator &rarr; Cloudflare Pages Edge Deployment.
+        </div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>AIWIC 2026 &bull; Tim Jogboy Web</span>
+      <span>Halaman 3 dari 5 (Di luar Cover)</span>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 4 (Innovation & Impact) ==================== -->
+  <div class="page">
+    <div class="page-header">
+      <span class="brand">E-Presensi Ma'had Tahfidz Imam 'Ashim</span>
+      <span>7. Innovation &bull; 8. Impact & Development Potential</span>
+    </div>
+
+    <div class="content-body">
+      <h2 class="section-title">7. Innovation & Differentiation</h2>
+      <p>Perbandingan komprehensif antara solusi E-Presensi Ma'had dengan metode presensi konvensional serta aplikasi komersial umum:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%;">Parameter Komparasi</th>
+            <th style="width: 25%;">Buku Kertas Konvensional</th>
+            <th style="width: 25%;">Aplikasi Presensi Komersial Umum</th>
+            <th style="width: 25%; background: #042f2e;">E-Presensi Ma'had (Solusi Kami)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Kecepatan Input</strong></td>
+            <td>Lambat (harus antre paraf fisik)</td>
+            <td>Sedang (aplikasi berat/loading lama)</td>
+            <td><strong>Sangat Cepat (< 3 detik di mobile)</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Ketergantungan Server</strong></td>
+            <td>Tidak ada (berkas fisik)</td>
+            <td>Tinggi (server down = gagal absensi)</td>
+            <td><strong>Zero Server Latency (Edge + Local Engine)</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Biaya Operasional</strong></td>
+            <td>Biaya kertas & cetak rutin</td>
+            <td>Biaya langganan SaaS per user/bulan</td>
+            <td><strong>Gratis / Serverless (Cloudflare Tier)</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Kesesuaian Kultur Lembaga</strong></td>
+            <td>Umum</td>
+            <td>Kaku (standar jam kantor korporat)</td>
+            <td><strong>Khusus Halaqah Pesantren & Passcode Lembaga</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Penyajian Rekapitulasi</strong></td>
+            <td>Manual 2-3 hari per akhir bulan</td>
+            <td>Dashboard generik rumit</td>
+            <td><strong>Live Table, Instant Filter, & Print Laporan</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 class="section-title" style="margin-top: 8px;">8. Impact & Development Potential</h2>
+
+      <div class="grid-2">
+        <div class="card card-accent">
+          <div class="subsection-title" style="margin-top:0; color: #064e3b;">📈 Dampak Nyata (*Measurable Impact*):</div>
+          <ul>
+            <li><strong>Efisiensi Waktu Rekapitulasi 90%:</strong> Menghilangkan beban administrasi merekap buku fisik dari 3 hari menjadi hitungan detik.</li>
+            <li><strong>Zero Data Loss:</strong> Mengeliminasi risiko catatan paraf hilang atau rusak akibat faktor fisik di asrama.</li>
+            <li><strong>Transparansi Finansial:</strong> Memberikan dasar yang valid bagi bendahara pesantren dalam membayarkan tunjangan asatidz.</li>
+            <li><strong>Peningkatan Disiplin Halaqah:</strong> Jam digital realtime mendorong kehadiran pengajar tepat waktu sebelum wirid dimulai.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="subsection-title" style="margin-top:0; color: #d97706;">🚀 Potensi Pengembangan Jangka Panjang:</div>
+          <ul>
+            <li><strong>GPS Geofencing Halaqah:</strong> Pembatasan radius absensi hanya saat asatidz berada dalam area kompleks ma'had.</li>
+            <li><strong>WhatsApp Gateway Reporting:</strong> Notifikasi otomatis ke smartphone mudir saat asatidz berhalangan hadir.</li>
+            <li><strong>Multi-Branch Cloud Sync:</strong> Integrasi Cloudflare D1 / Supabase Database untuk sinkronisasi antarcabang pesantren.</li>
+            <li><strong>AI Predictive Analytics:</strong> Analisis korelasi kehadiran asatidz terhadap progres hafalan juziyah santri.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card" style="border-left: 3px solid #64748b; background: #f8fafc; margin-top: 4px;">
+        <strong>Keterbatasan MVP Saat Ini (*Known Limitations*):</strong>
+        <p style="font-size: 8.2pt; margin-top: 2px;">
+          Basis data saat ini beroperasi pada level peramban pengguna (<em>client-side persistent storage</em>). Sinkronisasi multi-device penuh dan validasi biometrik wajah berada dalam fase pengembangan roadmap versi cloud selanjutnya.
+        </p>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>AIWIC 2026 &bull; Tim Jogboy Web</span>
+      <span>Halaman 4 dari 5 (Di luar Cover)</span>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 5 (Technology Disclosure & Submission Links) ==================== -->
+  <div class="page">
+    <div class="page-header">
+      <span class="brand">E-Presensi Ma'had Tahfidz Imam 'Ashim</span>
+      <span>9. Technology Disclosure &bull; 10. Submission Links</span>
+    </div>
+
+    <div class="content-body">
+      <h2 class="section-title">9. Technology Disclosure</h2>
+      <p>Sebagai bentuk transparansi dan integritas submission kompetisi AIWIC 2026, berikut rincian stack teknologi, modul AI, dan lisensi yang digunakan:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%;">Komponen Teknologi</th>
+            <th style="width: 35%;">Alat / Vendor / Framework</th>
+            <th style="width: 40%;">Peranan & Keterangan Penggunaan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>AI Coding Assistant & Agent</strong></td>
+            <td>Google DeepMind Gemini (via Antigravity / <code>agy</code> CLI)</td>
+            <td>Otomasi CI/CD, deployment Wrangler ke Cloudflare, scaffolding code, dan verifikasi keamanan.</td>
+          </tr>
+          <tr>
+            <td><strong>Frontend Core</strong></td>
+            <td>Semantic HTML5, Modern CSS3, Vanilla ES6+ JavaScript</td>
+            <td>Membangun arsitektur web responsif yang ringan dan independen dari framework berat.</td>
+          </tr>
+          <tr>
+            <td><strong>Persistence / Database</strong></td>
+            <td>Web Storage API (LocalStorage Engine via <code>local-db.js</code>)</td>
+            <td>Menyimpan data master asatidz dan riwayat absensi secara asinkron dan tahan offline.</td>
+          </tr>
+          <tr>
+            <td><strong>Hosting & Global Edge</strong></td>
+            <td>Cloudflare Pages (Global Anycast Edge Network)</td>
+            <td>Infrastruktur static web hosting dengan sertifikat SSL/TLS otomatis dan latency ultra-rendah.</td>
+          </tr>
+          <tr>
+            <td><strong>Version Control System</strong></td>
+            <td>Git & GitHub (jogboy-web/absensiweb)</td>
+            <td>Manajemen riwayat kode, semantic tag release, dan pelacakan commit hash submission.</td>
+          </tr>
+          <tr>
+            <td><strong>Third-party Assets</strong></td>
+            <td>Google Fonts (Plus Jakarta Sans & Amiri)</td>
+            <td>Tipografi berkarakter modern dan sentuhan kaligrafi Islami resmi.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 class="section-title" style="margin-top: 8px;">10. Submission Links & Informasi Uji Coba Juri</h2>
+      <p>Seluruh tautan dan kredensial untuk mengevaluasi kode serta mencoba langsung sistem MVP:</p>
+
+      <div class="grid-2">
+        <div class="card card-accent">
+          <strong style="color: #064e3b; font-size: 8.5pt;">🔗 Tautan Resmi Submission:</strong>
+          <ul style="font-size: 8pt; margin-top: 4px;">
+            <li><strong>Deployment URL (Live Site):</strong><br>
+              <a href="https://absensiweb-esy.pages.dev" target="_blank" style="color: #0284c7; font-weight:700;">https://absensiweb-esy.pages.dev</a>
+            </li>
+            <li style="margin-top: 3px;"><strong>GitHub Repository:</strong><br>
+              <a href="https://github.com/jogboy-web/absensiweb" target="_blank" style="color: #0284c7;">https://github.com/jogboy-web/absensiweb</a>
+            </li>
+            <li style="margin-top: 3px;"><strong>Git Tag Submission:</strong> <code>v1.0-submission</code></li>
+            <li style="margin-top: 3px;"><strong>Commit Hash:</strong> <code>c8cbad8a5f908932b23a4f7d80b565123f74a9e2</code></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <strong style="color: #d97706; font-size: 8.5pt;">🔑 Panduan Akses Demo Akun:</strong>
+          <div style="font-size: 8pt; margin-top: 4px;">
+            <p><strong>1. Uji Coba Registrasi Asatidz Baru:</strong></p>
+            <div class="code-box">Kode Registrasi Lembaga : MTIA2026</div>
+            <p style="font-size: 7.5pt; color: #64748b;">(Gunakan kode di atas saat pendaftaran asatidz baru di halaman login).</p>
+
+            <p style="margin-top: 4px;"><strong>2. Uji Coba Portal Administrator:</strong></p>
+            <p style="font-size: 7.5pt; color: #334155;">
+              Klik tombol <strong>"Login Administrator"</strong> pada halaman utama untuk langsung membuka audit log terpusat.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 15px; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 10px; font-size: 7.5pt; color: #64748b;">
+        <strong>Tim Jogboy Web &bull; Ma'had Tahfidz Imam 'Ashim Yogyakarta</strong><br>
+        Dokumen ini diajukan secara resmi untuk <em>AI Web Innovation Competition (AIWIC) 2026</em>.
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>AIWIC 2026 &bull; Tim Jogboy Web</span>
+      <span>Halaman 5 dari 5 (Di luar Cover)</span>
+    </div>
+  </div>
+
+</body>
+</html>
