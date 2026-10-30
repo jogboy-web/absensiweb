@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Administrator | Ma'had Tahfidz Imam 'Ashim Yogyakarta</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpeg">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Amiri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=3.1">
+</head>
+<body class="dash-page-wrapper">
+
+  <!-- ==========================================================================
+       NAVBAR ATAS ADMINISTRATOR (TANPA IKON)
+       ========================================================================== -->
+  <nav class="dash-navbar">
+    <div class="dash-nav-container">
+      <a href="dashboard-admin.html" class="dash-brand">
+        <div class="dash-brand-logo">
+          <img src="logo-clean.png" onerror="this.onerror=null; this.src='logo.jpeg';" alt="Logo Ma'had Imam 'Ashim">
+        </div>
+        <div class="dash-brand-text">
+          <div class="dash-brand-title-wrap">
+            <h1>Ma'had Tahfidz Imam 'Ashim</h1>
+            <span class="badge-role-admin">Administrator</span>
+          </div>
+          <span>Sistem Manajemen Presensi &amp; Rekapitulasi Asatidz</span>
+        </div>
+      </a>
+
+      <div class="dash-nav-right">
+        <!-- Live Clock & Date Realtime WIB -->
+        <div class="dash-live-clock-badge">
+          <span id="navLiveDate">Kamis, 22 Oktober 2026</span>
+          <span class="divider"></span>
+          <strong id="navLiveTime">--:--:-- WIB</strong>
+        </div>
+
+        <!-- Profil Admin -->
+        <div class="user-profile-simple">
+          <span class="user-name" id="adminDisplayName">Administrator Pusat</span>
+        </div>
+
+        <!-- Tombol Keluar / Logout -->
+        <a href="index.html" class="btn-logout-nav" title="Keluar dari Panel Admin">
+          <span>Keluar</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==========================================================================
+       TAB BAR NAVIGASI ADMINISTRATOR (MONITOR HARIAN, REKAP SEMUA USTADZ, DATA ASATIDZ)
+       ========================================================================== -->
+  <div class="dash-tab-bar admin-tab-bar">
+    <div class="dash-tab-container admin-tab-container">
+      <button type="button" class="nav-tab-btn active" id="tabAdminDaily" onclick="switchAdminTab('daily')">
+        <span>Monitor Harian</span>
+      </button>
+
+      <button type="button" class="nav-tab-btn" id="tabAdminRekap" onclick="switchAdminTab('rekap')">
+        <span>Rekap Semua Ustadz</span>
+      </button>
+
+      <button type="button" class="nav-tab-btn" id="tabAdminUstadz" onclick="switchAdminTab('ustadz')">
+        <span>Data Asatidz</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       KONTAINER UTAMA DASHBOARD ADMIN
+       ========================================================================== -->
+  <main class="dash-main-container">
+
+    <!-- BANNER SAMBUTAN ADMINISTRATOR -->
+    <header class="admin-banner">
+      <div class="admin-banner-title">
+        <h2>Monitoring Presensi Harian &amp; Rekapitulasi Asatidz</h2>
+        <p>Pusat kendali kehadiran tugas halaqah dan evaluasi kedisiplinan asatidz Ma'had Tahfidz Imam 'Ashim Yogyakarta.</p>
+      </div>
+    </header>
+
+    <!-- ========================================================================
+         BAGIAN 1: MONITOR HARIAN
+         ======================================================================== -->
+    <section id="viewAdminDaily" class="dash-view-panel">
+      
+      <!-- Kartu Ringkasan Metrik Harian (Tanpa Ikon, Grid 2x2 di Mobile, 4 Elongated di Desktop) -->
+      <div class="recap-stats-grid admin-stats-grid">
+        <div class="recap-stat-card hadir">
+          <div class="stat-content">
+            <div class="stat-title">Total Asatidz</div>
+            <div class="stat-number" id="statAdminTotalGuru">0 Asatidz</div>
+            <div class="stat-percent" style="color: var(--primary);">Akun Terdaftar</div>
+          </div>
+        </div>
+
+        <div class="recap-stat-card hadir">
+          <div class="stat-content">
+            <div class="stat-title" id="statAdminHadirTitle">Hadir Bertugas</div>
+            <div class="stat-number" id="statAdminHadir">0 Asatidz</div>
+            <div class="stat-percent" id="statAdminHadirDesc">0 Selesai / 0 Aktif</div>
+          </div>
+        </div>
+
+        <div class="recap-stat-card izin" id="cardAdminDailyIzin" onclick="openAdminDailyIzinModal()" title="Klik untuk melihat rincian izin &amp; udzur">
+          <div class="stat-content">
+            <div class="stat-title" id="statAdminIzinTitle">Izin &amp; Sakit</div>
+            <div class="stat-number" id="statAdminIzin">0 Asatidz</div>
+            <div class="stat-percent" id="statAdminIzinDesc" style="color: #0284c7;">Udzur Terkonfirmasi</div>
+          </div>
+        </div>
+
+        <div class="recap-stat-card alpha">
+          <div class="stat-content">
+            <div class="stat-title" id="statAdminBelumTitle">Belum Presensi</div>
+            <div class="stat-number" id="statAdminBelum">0 Asatidz</div>
+            <div class="stat-percent" id="statAdminBelumDesc" style="color: #dc2626;">Belum Ada Catatan</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER BAR MONITORING HARIAN -->
+      <div class="admin-filter-bar">
+        
+        <!-- Baris 1: Filter Tanggal Custom Dropdown Calendar -->
+        <div class="admin-filter-row">
+          <div class="admin-date-filter-container">
+            <label class="admin-filter-label" id="adminFilterDateLabel">Pilih Tanggal:</label>
+            
+            <div class="admin-date-controls-group">
+              <!-- Custom Calendar Dropdown Wrapper -->
+              <div class="custom-datepicker-wrapper" id="wrapperAdminDatePicker">
+                <button type="button" class="admin-date-trigger" id="btnTriggerAdminDatePicker" onclick="toggleAdminDatePicker()" title="Buka Kalender Pilihan Tanggal">
+                  <span id="adminDateDisplayLabel">22/10/2026</span>
+                </button>
+
+                <!-- Popup Kalender Kustom Admin (Tanpa Ikon) -->
+                <div class="custom-calendar-popup" id="adminCalendarPopup">
+                  <div class="calendar-header">
+                    <button type="button" class="calendar-nav-btn" onclick="prevAdminCalendarMonth()" title="Bulan Sebelumnya">&lt;</button>
+                    <div class="calendar-header-title" id="adminCalendarMonthYearText">Oktober 2026</div>
+                    <button type="button" class="calendar-nav-btn" onclick="nextAdminCalendarMonth()" title="Bulan Berikutnya">&gt;</button>
+                  </div>
+
+                  <div class="calendar-weekdays">
+                    <span class="ahad">Min</span>
+                    <span>Sen</span>
+                    <span>Sel</span>
+                    <span>Rab</span>
+                    <span>Kam</span>
+                    <span>Jum</span>
+                    <span>Sab</span>
+                  </div>
+
+                  <div class="calendar-days-grid" id="adminCalendarDaysGrid"></div>
+
+                  <div class="calendar-footer">
+                    <button type="button" class="calendar-today-btn" onclick="selectAdminCalendarToday()">Pilih Hari Ini</button>
+                    <span class="calendar-selected-info" id="adminCalendarSelectedInfo">22/10/2026</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Input tersembunyi untuk kompatibilitas filter data -->
+              <input type="hidden" id="adminDailyDatePicker" value="2026-10-22">
+
+              <button type="button" class="btn-date-quick active" id="btnAdminDateToday" onclick="setAdminDailyDateToday()">
+                Hari Ini
+              </button>
+              <button type="button" class="btn-date-quick" id="btnAdminDateYesterday" onclick="setAdminDailyDateYesterday()">
+                Kemarin
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-filter-group admin-range-badge-wrap">
+            <span class="badge-month-range">
+              <span>Rentang: Oktober 2026 (1 Bulan Penuh)</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Baris 2: Filter Shift (Tanpa Tulisan "Shift:") & Pencarian -->
+        <div class="admin-filter-row divider-top">
+          <div class="admin-filter-group admin-shift-group">
+            <button type="button" class="filter-pill-btn active" data-filter-shift="all" onclick="filterAdminDailyShift('all', this)">Semua Shift</button>
+            <button type="button" class="filter-pill-btn" data-filter-shift="pagi" onclick="filterAdminDailyShift('pagi', this)">Pagi</button>
+            <button type="button" class="filter-pill-btn" data-filter-shift="siang" onclick="filterAdminDailyShift('siang', this)">Siang</button>
+            <button type="button" class="filter-pill-btn" data-filter-shift="sore" onclick="filterAdminDailyShift('sore', this)">Sore</button>
+            <button type="button" class="filter-pill-btn" data-filter-shift="malam" onclick="filterAdminDailyShift('malam', this)">Malam</button>
+          </div>
+
+          <div class="admin-filter-group admin-search-group">
+            <input 
+              type="text" 
+              id="adminDailySearchInput" 
+              class="admin-search-input" 
+              placeholder="Cari nama, catatan pembelajaran..."
+              oninput="searchAdminDailyTable()"
+            >
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tabel Monitoring Harian Asatidz (Tanpa Ikon & Tanpa Tulisan Realtime Sync WIB) -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h3>
+            <span id="adminDailyTableTitle">Daftar Presensi Asatidz — Kamis, 22 Oktober 2026</span>
+          </h3>
+        </div>
+
+        <div class="table-responsive">
+          <table class="recap-table" id="tableAdminDaily">
+            <thead>
+              <tr>
+                <th style="width: 5%; text-align: center;">No</th>
+                <th style="width: 25%;">Nama Asatidz</th>
+                <th style="width: 14%;">Shift Tugas</th>
+                <th style="width: 20%; text-align: center;">Jam Masuk - Jam Pulang</th>
+                <th style="width: 26%;">Catatan Pembelajaran</th>
+                <th style="width: 10%; text-align: center;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyAdminDaily">
+              <!-- Di-render dinamis oleh script.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================
+         BAGIAN 2: REKAPITULASI BULANAN SELURUH ASATIDZ (REKAP SEMUA USTADZ)
+         ======================================================================== -->
+    <section id="viewAdminRekap" class="dash-view-panel hidden">
+      
+      <!-- Filter Bar Rekapitulasi Admin -->
+      <div class="recap-filter-bar">
+        <div class="recap-quick-buttons">
+          <span class="recap-periode-label" style="font-size: 0.82rem; font-weight: 700; color: var(--dark-muted); margin-right: 0.25rem; white-space: nowrap;">Periode:</span>
+          <div class="recap-buttons-row">
+            <button type="button" class="btn-recap-filter active" id="btnAdminQuickCurrentMonth" onclick="selectAdminQuickMonth(0)">Bulan Ini</button>
+            <button type="button" class="btn-recap-filter" id="btnAdminQuickPrevMonth" onclick="selectAdminQuickMonth(1)">Bulan Lalu</button>
+            <button type="button" class="btn-recap-filter" id="btnAdminQuickTwoMonthsAgo" onclick="selectAdminQuickMonth(2)">Agustus</button>
+          </div>
+        </div>
+
+        <div class="recap-custom-controls">
+          <!-- Tombol Cetak Rekap Resmi (Tanpa Ikon) -->
+          <button type="button" class="btn-export-action" onclick="window.print()">
+            <span>Cetak Rekap Resmi</span>
+          </button>
+
+          <!-- Tombol Unduh PDF (Tanpa Ikon) -->
+          <button type="button" class="btn-export-action" onclick="window.print()">
+            <span>Unduh PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Ringkasan Statistik Rekap Seluruh Asatidz (Tanpa Ikon) -->
+      <div class="recap-stats-grid admin-stats-grid admin-recap-stats-grid">
+        <div class="recap-stat-card hadir">
+          <div class="stat-content">
+            <div class="stat-title">Rata-rata Disiplin</div>
+            <div class="stat-number" id="statAdminRecapDisiplin">0%</div>
+            <div class="stat-percent" id="statAdminRecapDisiplinDesc" style="color: var(--primary);">Kategori: -</div>
+          </div>
+        </div>
+
+        <div class="recap-stat-card hadir">
+          <div class="stat-content">
+            <div class="stat-title">Hadir Selesai</div>
+            <div class="stat-number" id="statAdminRecapHadir">0 Shift</div>
+            <div class="stat-percent" style="color: var(--primary);">Akumulasi Presensi Pulang</div>
+          </div>
+        </div>
+
+        <div class="recap-stat-card izin" id="cardAdminRecapIzin" onclick="openAdminIzinModal()" title="Klik untuk melihat rincian izin &amp; udzur">
+          <div class="stat-content">
+            <div class="stat-title">Total Izin / Udzur</div>
+            <div class="stat-number" id="statAdminRecapIzin">0 Hari</div>
+            <div class="stat-percent" id="statAdminRecapIzinDesc" style="color: #0284c7;">Udzur Terkonfirmasi (Klik Detail)</div>
+          </div>
+        </div>
+
+        <div class="recap-stat-card alpha">
+          <div class="stat-content">
+            <div class="stat-title">Total Alpha</div>
+            <div class="stat-number" id="statAdminRecapAlpha">0 Hari</div>
+            <div class="stat-percent" style="color: #dc2626;">Tanpa Keterangan</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabel Komprehensif Rekap Per Asatidz (Tanpa Ikon) -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h3 id="adminRecapHeaderTitle" class="admin-recap-header-title">
+            <span class="recap-title-main">Laporan Rekap Presensi Seluruh Asatidz</span>
+            <span class="recap-title-sep">—</span>
+            <span class="recap-title-sub" id="adminRecapMonthSubtitle">Bulan Oktober 2026</span>
+          </h3>
+        </div>
+
+        <div class="table-responsive">
+          <table class="recap-table" id="tableAdminRecapAll">
+            <thead>
+              <tr>
+                <th style="width: 5%; text-align: center;">No</th>
+                <th style="width: 28%;">Nama Asatidz</th>
+                <th style="width: 25%;">Jabatan</th>
+                <th style="width: 14%; text-align: center; color: var(--primary);">Total Hadir</th>
+                <th style="width: 14%; text-align: center; color: #0284c7;">Izin / Sakit</th>
+                <th style="width: 14%; text-align: center;">Nomor WhatsApp</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyAdminRecapAll">
+              <!-- Di-render dinamis oleh script.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================
+         BAGIAN 3: DATA ASATIDZ (DIREKTORI)
+         ======================================================================== -->
+    <section id="viewAdminUstadz" class="dash-view-panel hidden">
+      
+      <div class="admin-directory-header">
+        <h3 class="admin-directory-title">Direktori Asatidz &amp; Pengajar</h3>
+        <p class="admin-directory-subtitle">Daftar asatidz dan pengampu halaqah yang terdaftar secara mandiri di sistem.</p>
+      </div>
+
+      <!-- Banner Kode Registrasi Lembaga Resmi -->
+      <div class="admin-passcode-banner">
+        <div class="admin-passcode-info">
+          <span class="passcode-label">Kode Registrasi Asatidz Baru:</span>
+          <span class="passcode-code-badge" id="displayAdminPasscode">MTIA2026</span>
+          <span class="passcode-hint">Hanya asatidz resmi yang memegang kode ini yang dapat membuat akun di halaman login.</span>
+        </div>
+      </div>
+
+      <!-- Grid Cards Asatidz -->
+      <div class="admin-asatidz-grid" id="gridAsatidzDirectory">
+        <!-- Di-render dinamis oleh script.js -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER DASHBOARD ADMIN -->
+  <footer class="dash-footer">
+    <div>
+      <span>© 2026 <strong>Ma'had Tahfidz Imam 'Ashim Yogyakarta</strong>. Hak Cipta Dilindungi.</span>
+    </div>
+    <div>
+      <span>Panel Manajemen &amp; Monitoring Absensi Administrator v2.5</span>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       MODAL OVERLAY: RINCIAN IZIN & UDZUR ASATIDZ
+       ========================================================================= -->
+  <div class="modal-backdrop" id="modalAdminIzinRecap" onclick="handleAdminIzinBackdrop(event)">
+    <div class="modal-card modal-izin-card" onclick="event.stopPropagation()">
+      <div class="modal-header modal-izin-header">
+        <div class="modal-izin-title-wrap">
+          <h3 id="modalAdminIzinTitle">Rincian Izin &amp; Udzur Asatidz</h3>
+          <p id="modalAdminIzinSubtitle" class="modal-izin-subtitle">Bulan Oktober 2026</p>
+        </div>
+        <button type="button" class="modal-close-icon-btn" onclick="closeAdminIzinModal()" title="Tutup">&times;</button>
+      </div>
+
+      <div class="modal-body modal-izin-body" id="modalAdminIzinBody">
+        <!-- Render dinamis kartu rincian izin asatidz -->
+      </div>
+
+      <div class="modal-footer modal-izin-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeAdminIzinModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFIKASI -->
+  <div id="liveToast" class="toast-box" role="status" aria-live="polite"></div>
+
+  <!-- Database Lokal Mandiri (100% Standalone & Bebas dari Cloud) -->
+  <script src="local-db.js"></script>
+  <script src="script.js?v=3.1"></script>
+</body>
+</html>

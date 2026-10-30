@@ -1,0 +1,4812 @@
+/* ==========================================================================
+   PORTAL LOGIN & DASHBOARD USTADZ E-PRESENSI
+   MA'HAD TAHFIDZ IMAM 'ASHIM YOGYAKARTA
+   
+   Skema Warna Resmi Sesuai Logo:
+   - Hijau (#007A53 / RGB: 0, 122, 83) : Kubah, alas buku, teks latin
+   - Kuning Emas (#F3B229 / RGB: 243, 178, 41) : Pita melengkung, simbol bulan bintang
+   - Putih (#FFFFFF / RGB: 255, 255, 255) : Latar belakang, teks elemen
+   - Hitam (#1A1A1A / RGB: 26, 26, 26) : Teks kaligrafi Arab & teks utama
+   ========================================================================== */
+
+:root {
+  /* Warna Inti Sesuai Logo */
+  --primary: #007A53;
+  --primary-rgb: 0, 122, 83;
+  --primary-dark: #005a3d;
+  --primary-darker: #00412c;
+  --primary-hover: #006644;
+  --primary-light: #0d9b6c;
+  --primary-soft: #e6f5ef;
+  --primary-glass: rgba(0, 122, 83, 0.08);
+
+  --gold: #F3B229;
+  --gold-rgb: 243, 178, 41;
+  --gold-dark: #d59616;
+  --gold-hover: #e09f18;
+  --gold-light: #fef8eb;
+  --gold-soft: rgba(243, 178, 41, 0.15);
+
+  --white: #FFFFFF;
+  --white-rgb: 255, 255, 255;
+
+  --dark: #1A1A1A;
+  --dark-rgb: 26, 26, 26;
+  --dark-muted: #3d4543;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+
+  --bg-page: #f4f7f5;
+  --bg-surface: #ffffff;
+  --border-color: #e2e8f0;
+  --border-focus: #007A53;
+
+  /* Status Colors */
+  --status-present: #007A53;
+  --status-late: #F3B229;
+  --status-permit: #0284c7;
+  --status-sick: #8b5cf6;
+  --status-absent: #dc2626;
+
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-arabic: 'Amiri', 'Traditional Arabic', serif;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 14px -1px rgba(0, 122, 83, 0.1), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 14px 30px -4px rgba(0, 122, 83, 0.15), 0 8px 14px -3px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 24px 50px -12px rgba(0, 70, 46, 0.28);
+  --shadow-gold: 0 4px 16px rgba(243, 178, 41, 0.35);
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.18s ease;
+  --transition-normal: 0.28s ease;
+  --transition-slow: 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  color: var(--dark);
+  background-color: var(--bg-page);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   VIEWPORT LOGIN & AUTH STYLES
+   ========================================================================== */
+.login-viewport {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  position: relative;
+  overflow-x: hidden;
+  background: linear-gradient(135deg, #07261b 0%, #004d34 40%, #007A53 100%);
+}
+
+.login-viewport::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(243, 178, 41, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(0, 122, 83, 0.35) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l15 15-15 15L15 15 30 0zm0 30l15 15-15 15-15-15 15-15zM0 30l15-15 15 15-15 15L0 30zm30 0l15-15 15 15-15 15-15-15z' fill='%23f3b229' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.login-topbar {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1080px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.5rem 1rem;
+  color: var(--white);
+  font-size: 0.85rem;
+}
+
+.topbar-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(243, 178, 41, 0.4);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(8px);
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+.topbar-badge .live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.topbar-clock {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.topbar-clock svg {
+  width: 16px;
+  height: 16px;
+  color: var(--gold);
+}
+
+/* Card Login */
+.login-card-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1080px;
+  margin: auto 0;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  border: 1.5px solid rgba(243, 178, 41, 0.3);
+  animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.brand-panel {
+  background: linear-gradient(155deg, #00442c 0%, #005a3d 40%, #007A53 100%);
+  padding: 3.25rem 2.75rem;
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='52' height='52' viewBox='0 0 52 52' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M26 0l13 13-13 13L13 13 26 0zm0 26l13 13-13 13-13-13 13-13zM0 26l13-13 13 13-13 13L0 26zm26 0l13-13 13 13-13 13-13-13z' fill='%23ffffff' fill-opacity='0.04' fill-rule='evenodd'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.brand-panel-top { position: relative; z-index: 1; }
+
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.95rem;
+  background: rgba(243, 178, 41, 0.15);
+  border: 1px solid rgba(243, 178, 41, 0.45);
+  border-radius: var(--radius-full);
+  color: var(--gold);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(4px);
+}
+
+.brand-pill svg { width: 14px; height: 14px; fill: currentColor; }
+
+.logo-container { text-align: center; margin-bottom: 2rem; }
+
+.logo-frame {
+  display: inline-block;
+  position: relative;
+  padding: 12px;
+  background: var(--white);
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28), 0 0 0 3px var(--gold);
+  margin-bottom: 1.25rem;
+  transition: transform var(--transition-normal);
+}
+
+.logo-frame:hover { transform: translateY(-3px) scale(1.02); }
+
+.logo-frame img {
+  display: block;
+  width: 110px;
+  height: auto;
+  max-height: 125px;
+  object-fit: contain;
+}
+
+.brand-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.brand-title .gold-city {
+  color: var(--gold);
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  margin-top: 0.25rem;
+}
+
+.brand-arabic {
+  font-family: var(--font-arabic);
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.94);
+  margin-top: 0.6rem;
+  direction: rtl;
+  line-height: 1.5;
+}
+
+.brand-features {
+  position: relative;
+  z-index: 1;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(243, 178, 41, 0.2);
+  color: var(--gold);
+  border: 1px solid rgba(243, 178, 41, 0.45);
+  flex-shrink: 0;
+}
+
+.feature-icon svg { width: 16px; height: 16px; }
+
+.brand-panel-footer {
+  position: relative;
+  z-index: 1;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.brand-panel-footer .quote {
+  font-style: italic;
+  margin-bottom: 0.35rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.9rem;
+}
+
+.brand-panel-footer .quote-author {
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+/* Panel Form Login */
+.form-panel {
+  padding: 3.25rem 2.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--white);
+}
+
+.form-header { margin-bottom: 1.75rem; }
+
+.form-header .welcome-badge {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  background: var(--primary-soft);
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 0.65rem;
+  border: 1px solid rgba(0, 122, 83, 0.15);
+}
+
+.form-header h2 {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 0.35rem;
+  line-height: 1.25;
+}
+
+.form-header p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.role-tabs-container { margin-bottom: 1.4rem; }
+
+.role-tabs-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--dark-muted);
+  margin-bottom: 0.45rem;
+}
+
+.role-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  background: var(--bg-page);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  gap: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.role-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.65rem 0.4rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.role-tab svg { width: 18px; height: 18px; }
+.role-tab:hover { color: var(--primary); background: rgba(0, 122, 83, 0.05); }
+.role-tab.active {
+  background: var(--white);
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 122, 83, 0.2);
+}
+.role-tab.active svg { color: var(--primary); }
+
+.form-group { margin-bottom: 1.2rem; }
+
+.form-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 0.45rem;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.85rem;
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.78rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--dark);
+  background: var(--white);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  outline: none;
+  box-sizing: border-box;
+  transition: all var(--transition-fast);
+}
+
+/* Jika di dalam .input-wrapper */
+.input-wrapper .form-control {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Jika memiliki tombol teks toggle kata sandi di kanan */
+.input-wrapper:has(.password-toggle-btn) .form-control,
+.input-wrapper input[type="password"] {
+  padding-right: 3.8rem;
+}
+
+/* Penataan Placeholder Global agar rapi dan tidak terpotong garis tepi */
+::placeholder {
+  color: #94a3b8;
+  font-size: 0.86rem;
+  font-weight: 400;
+  line-height: normal;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 1;
+}
+
+.form-control::placeholder {
+  color: #94a3b8;
+  font-size: 0.86rem;
+  font-weight: 400;
+  line-height: normal;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3.5px rgba(0, 122, 83, 0.15);
+}
+.input-wrapper:focus-within .input-icon { color: var(--primary); }
+
+.password-toggle-btn {
+  position: absolute;
+  right: 0.65rem;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 0.25rem 0.55rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  transition: all var(--transition-fast);
+  z-index: 2;
+  user-select: none;
+}
+
+.password-toggle-btn:hover {
+  color: var(--primary);
+  background: #eef8f3;
+  border-color: #a7d7c5;
+}
+
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  font-size: 0.84rem;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: var(--dark-muted);
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--white);
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.forgot-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.forgot-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  color: var(--white);
+  box-shadow: 0 4px 14px rgba(0, 122, 83, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-dark) 100%);
+  box-shadow: 0 6px 20px rgba(0, 122, 83, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.75; cursor: not-allowed; transform: none; }
+
+.auth-switch {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-text-gold {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 3px;
+  transition: all var(--transition-fast);
+}
+
+.btn-text-gold:hover {
+  color: var(--primary-dark);
+  text-decoration-color: var(--primary);
+}
+
+.form-view { animation: fadeInForm 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+.form-view.hidden,
+.hidden { display: none !important; }
+
+@keyframes fadeInForm {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.form-grid-2 .input-icon {
+  left: 0.75rem;
+}
+
+.form-grid-2 .input-wrapper .form-control {
+  padding-left: 2.2rem;
+  padding-right: 0.85rem;
+}
+
+.form-grid-2 .input-wrapper:has(.password-toggle-btn) .form-control,
+.form-grid-2 .input-wrapper input[type="password"] {
+  padding-right: 2.5rem;
+}
+
+.form-grid-2 .form-control::placeholder {
+  font-size: 0.83rem;
+  letter-spacing: -0.15px;
+}
+
+@media (max-width: 576px) {
+  .form-grid-2 { grid-template-columns: 1fr; gap: 0; }
+  .form-grid-2 .input-wrapper .form-control {
+    padding-left: 2.35rem;
+    padding-right: 1rem;
+  }
+}
+
+/* ==========================================================================
+   DASHBOARD USTADZ STYLES (SESUAI PERMINTAAN USER)
+   ========================================================================== */
+.dash-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-page);
+}
+
+/* Navbar Atas */
+.dash-navbar {
+  background: var(--white);
+  border-bottom: 2px solid rgba(243, 178, 41, 0.4);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.dash-nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.85rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dash-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+}
+
+.dash-brand-logo {
+  width: 46px;
+  height: 46px;
+  padding: 3px;
+  background: var(--white);
+  border-radius: 12px;
+  border: 2px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.dash-brand-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.dash-brand-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.dash-brand-text h1,
+.dash-brand-text h2 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1.2;
+  text-transform: uppercase;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.dash-brand-text span,
+.dash-brand-text p {
+  font-size: 0.76rem;
+  color: var(--dark-muted);
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.dash-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dash-live-clock-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--primary-soft);
+  color: var(--primary);
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid rgba(0, 122, 83, 0.15);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dash-live-clock-badge svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+/* Status Profil Ustadz: Cukup Nama Saja (Tanpa Foto / Gelar) */
+.user-profile-simple {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 0.9rem;
+  background: var(--bg-page);
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-color);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--dark);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-logout-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-logout-nav:hover {
+  background: #dc2626;
+  color: var(--white);
+}
+
+/* Tab Bar Menu */
+.dash-tab-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dash-tab-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dash-tab-container::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 0.5rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.nav-tab-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+.nav-tab-btn:hover { color: var(--primary); }
+.nav-tab-btn.active {
+  color: var(--primary);
+  border-bottom-color: var(--gold);
+}
+
+/* Kontainer Utama Dashboard */
+.dash-main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  width: 100%;
+  flex: 1;
+}
+
+.dash-view-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  animation: fadeInForm 0.35s ease;
+}
+
+.dash-view-panel.hidden { display: none !important; }
+
+/* Banner Sambutan Ustadz */
+.ustadz-banner {
+  background: linear-gradient(135deg, #004d34 0%, #007A53 65%, #0d9b6c 100%);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2.25rem;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  border: 1.5px solid rgba(243, 178, 41, 0.35);
+}
+
+.ustadz-banner-title h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+}
+
+.ustadz-banner-title p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.92rem;
+  max-width: 650px;
+}
+
+.banner-badge-ta {
+  background: rgba(243, 178, 41, 0.2);
+  border: 1px solid rgba(243, 178, 41, 0.5);
+  color: var(--gold);
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+}
+
+/* Card Surface Dashboard */
+.dash-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  overflow: visible;
+  position: relative;
+}
+
+.dash-card-header {
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fafbfc;
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+.dash-card-header h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.dash-card-header h3 svg { color: var(--primary); width: 20px; height: 20px; }
+.dash-card-body { padding: 1.75rem; }
+
+/* ==========================================================================
+   STATUS KEHADIRAN HARI INI (SEDERHANA: SHIFT, MASUK ✓, PULANG ✕)
+   ========================================================================== */
+.today-status-container {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.today-status-box {
+  background: var(--bg-page);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.today-status-box.active-shift-box {
+  border-color: var(--gold);
+  background: linear-gradient(180deg, #ffffff 0%, var(--gold-light) 100%);
+}
+
+.status-box-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.status-box-val {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--dark);
+}
+
+.status-indicator-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.status-indicator-badge.centang-masuk {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: 1px solid rgba(0, 122, 83, 0.25);
+}
+
+.status-indicator-badge.silang-pulang {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+.status-indicator-badge.centang-pulang {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: 1px solid rgba(0, 122, 83, 0.25);
+}
+
+.badge-hari-ini {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-soft);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.today-detail-row {
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-page);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.today-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.today-detail-item .detail-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.today-detail-item strong {
+  font-size: 0.92rem;
+  color: var(--dark);
+}
+
+/* ==========================================================================
+   FORM CHECK-IN & CHECK-OUT HARIAN
+   ========================================================================== */
+.presence-actions-tabs {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-form-toggle {
+  flex: 1;
+  padding: 0.85rem 1rem;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-color);
+  background: var(--bg-page);
+  color: var(--dark-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all var(--transition-fast);
+}
+
+.btn-form-toggle.active {
+  background: var(--white);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 4px 14px rgba(0, 122, 83, 0.15);
+}
+
+/* Pilihan Shift Radio */
+.shift-radio-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.shift-radio-card {
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-page);
+  border-radius: var(--radius-md);
+  padding: 1rem 0.85rem;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+}
+
+.shift-radio-card:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.shift-radio-card.selected {
+  background: var(--white);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--gold);
+}
+
+.shift-radio-card .icon { font-size: 1.5rem; }
+.shift-radio-card .title { font-size: 0.92rem; font-weight: 800; color: var(--dark); }
+
+/* Status Badge di dalam Kartu Shift */
+.shift-status-pill {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  margin-top: 0.25rem;
+  line-height: 1.2;
+  transition: all var(--transition-fast);
+}
+.shift-status-pill.pill-none {
+  background: rgba(148, 163, 184, 0.18);
+  color: var(--text-muted);
+}
+.shift-status-pill.pill-active {
+  background: rgba(2, 132, 199, 0.15);
+  color: #0284c7;
+  border: 1px solid rgba(2, 132, 199, 0.3);
+}
+.shift-status-pill.pill-done {
+  background: rgba(16, 185, 129, 0.15);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Box Jam Otomatis Ngisi Sendiri */
+.autofill-clock-row {
+  background: #f8fafc;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Tombol Aksi Presensi Masuk (Check-In) & Pulang (Check-Out) di Desktop */
+.presence-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+.presence-action-buttons .btn {
+  flex: 1;
+  min-height: 48px;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.btn-pulang-action {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1.5px solid #dc2626;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-pulang-action:hover {
+  background: #dc2626;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25);
+  transform: translateY(-1px);
+}
+
+.autofill-clock-text {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.autofill-indicator-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--gold-light);
+  color: var(--gold-dark);
+  border: 1px solid rgba(243, 178, 41, 0.4);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.pulse-green {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulseDot 1.5s infinite;
+}
+
+/* ==========================================================================
+   TABEL REKAPITULASI 4 KOLOM SHIFT: PAGI, SIANG, SORE, MALAM
+   ========================================================================== */
+.recap-filter-bar {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.75rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.recap-quick-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.recap-periode-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--dark-muted);
+  white-space: nowrap;
+}
+
+.recap-buttons-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-recap-filter {
+  padding: 0.55rem 1.15rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-page);
+  color: var(--dark-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-recap-filter:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-recap-filter.active {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0, 122, 83, 0.25);
+}
+
+.recap-custom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   DROPDOWN & PILIHAN REKAPITULASI (BULAN & TAHUN BERGAYA KHAS MA'HAD)
+   ========================================================================== */
+.recap-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0.6rem 2.6rem 0.6rem 1.15rem;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #005a3c;
+  background: linear-gradient(180deg, #f7fbf9 0%, #e8f5ee 100%);
+  border: 1.5px solid #a7d7c5;
+  border-radius: var(--radius-md);
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 122, 83, 0.08);
+  transition: all var(--transition-fast);
+}
+
+.recap-select:hover {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 3px 10px rgba(0, 122, 83, 0.16);
+  transform: translateY(-1px);
+}
+
+.recap-select:focus {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3.5px rgba(0, 122, 83, 0.2);
+}
+
+/* ==========================================================================
+   KOTAK PILIHAN POPUP DROPDOWN KUSTOM (SAAT DIKLIK MUNCUL KOTAK PILIHAN BERGAYA)
+   ========================================================================== */
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0b3b2c;
+  background: linear-gradient(180deg, #fbfdfc 0%, #eef8f3 100%);
+  border: 1.5px solid #a7d7c5;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  outline: none;
+  transition: all var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(0, 122, 83, 0.06);
+  text-align: left;
+}
+
+.trigger-label.placeholder {
+  color: #94a3b8 !important;
+  font-weight: 500 !important;
+}
+
+.custom-select-wrapper .input-icon {
+  position: absolute;
+  left: 0.95rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary);
+  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+
+.custom-select-trigger:hover {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 3px 10px rgba(0, 122, 83, 0.14);
+}
+
+.custom-select-wrapper.open,
+.custom-select-recap.open {
+  z-index: 1050;
+  position: relative;
+}
+
+.custom-select-wrapper.open .custom-select-trigger,
+.custom-select-recap.open .custom-select-trigger {
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3.5px rgba(0, 122, 83, 0.2);
+}
+
+.trigger-arrow {
+  width: 16px;
+  height: 16px;
+  color: var(--primary);
+  transition: transform var(--transition-fast);
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+.custom-select-wrapper.open .trigger-arrow,
+.custom-select-recap.open .trigger-arrow {
+  transform: rotate(180deg);
+}
+
+/* KOTAK PILIHAN YANG MUNCUL SAAT KLIK PANEL PANAH */
+.custom-select-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1.5px solid #a7d7c5;
+  border-radius: var(--radius-md);
+  box-shadow: 0 14px 32px rgba(0, 122, 83, 0.18), 0 4px 10px rgba(0, 0, 0, 0.08);
+  z-index: 1100;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 0.45rem;
+  display: none;
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Scrollbar halus elegan untuk popup dropdown */
+.custom-select-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-select-dropdown::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+.custom-select-dropdown::-webkit-scrollbar-thumb {
+  background: #a7d7c5;
+  border-radius: 4px;
+}
+.custom-select-dropdown::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+.custom-select-wrapper.open .custom-select-dropdown,
+.custom-select-recap.open .custom-select-dropdown {
+  display: block;
+}
+
+/* Mode Terbuka ke Atas (Smart Flip saat ruang bawah sempit) */
+.custom-select-wrapper.open-up .custom-select-dropdown,
+.custom-select-recap.open-up .custom-select-dropdown {
+  top: auto;
+  bottom: calc(100% + 6px);
+  box-shadow: 0 -14px 32px rgba(0, 122, 83, 0.18), 0 -4px 10px rgba(0, 0, 0, 0.08);
+  animation: dropdownFadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Elevasi z-index pada baris formulir saat dropdown terbuka agar di atas input berikutnya */
+.form-group:has(.custom-select-wrapper.open),
+.form-grid-2:has(.custom-select-wrapper.open) {
+  position: relative;
+  z-index: 1050;
+}
+
+/* Setiap Item Opsi Pilihan di dalam Kotak Pop-up */
+.custom-option {
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all var(--transition-fast);
+  margin-bottom: 2px;
+}
+
+.custom-option:hover {
+  background: #eef8f3;
+  color: var(--primary);
+  font-weight: 700;
+  padding-left: 1.15rem;
+}
+
+.custom-option.selected {
+  background: #e6f7ef;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.custom-option .option-check {
+  font-size: 0.95rem;
+  color: var(--primary);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.custom-option.selected .option-check {
+  opacity: 1;
+}
+
+/* Scrollbar Indah untuk Kotak Pop-up */
+.custom-select-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-select-dropdown::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 4px;
+}
+.custom-select-dropdown::-webkit-scrollbar-thumb {
+  background: #a7d7c5;
+  border-radius: 4px;
+}
+.custom-select-dropdown::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Kotak Pilihan Versi Rekapitulasi (Bulan & Tahun) */
+.custom-select-recap {
+  position: relative;
+  min-width: 140px;
+}
+
+.custom-select-recap .custom-select-trigger {
+  padding: 0.55rem 0.9rem 0.55rem 1rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #005a3c;
+  background: linear-gradient(180deg, #f7fbf9 0%, #e8f5ee 100%);
+  border: 1.5px solid #a7d7c5;
+  border-radius: var(--radius-md);
+}
+
+.custom-select-recap .custom-select-dropdown {
+  min-width: 165px;
+}
+
+/* ==========================================================================
+   KOTAK KALENDER CUSTOM BERGAYA ELEGAN (CUSTOM DATEPICKER POPUP)
+   ========================================================================== */
+.custom-datepicker-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.custom-datepicker-wrapper .input-icon {
+  position: absolute;
+  left: 0.95rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary);
+  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+
+.custom-datepicker-wrapper.open {
+  z-index: 1050;
+  position: relative;
+}
+
+.custom-datepicker-wrapper.open .custom-select-trigger {
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3.5px rgba(0, 122, 83, 0.2);
+}
+
+.custom-datepicker-wrapper.open .trigger-arrow {
+  transform: rotate(180deg);
+}
+
+.form-group:has(.custom-datepicker-wrapper.open),
+.form-grid-2:has(.custom-datepicker-wrapper.open) {
+  position: relative;
+  z-index: 1050;
+}
+
+/* POPUP KALENDER */
+.custom-calendar-popup {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  min-width: 290px;
+  max-width: 330px;
+  background: #ffffff;
+  border: 1.5px solid #a7d7c5;
+  border-radius: var(--radius-md);
+  box-shadow: 0 16px 36px rgba(0, 122, 83, 0.2), 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 1100;
+  padding: 1rem 1.1rem;
+  display: none;
+  animation: dropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.custom-datepicker-wrapper.open .custom-calendar-popup {
+  display: block;
+}
+
+/* Mode Terbuka ke Atas (Smart Flip) */
+.custom-datepicker-wrapper.open-up .custom-calendar-popup {
+  top: auto;
+  bottom: calc(100% + 6px);
+  box-shadow: 0 -16px 36px rgba(0, 122, 83, 0.2), 0 -4px 12px rgba(0, 0, 0, 0.08);
+  animation: dropdownFadeInUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Header Kalender (Navigasi Bulan & Tahun) */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1.5px solid #f0fdf4;
+}
+
+.calendar-header-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #004d34;
+  letter-spacing: -0.2px;
+}
+
+.calendar-nav-btn {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.calendar-nav-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+.calendar-nav-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Baris Nama Hari */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  text-align: center;
+  margin-bottom: 0.4rem;
+}
+
+.calendar-weekdays span {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #64748b;
+  padding: 0.25rem 0;
+}
+
+.calendar-weekdays span.jumat {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.calendar-weekdays span.ahad {
+  color: #e11d48;
+}
+
+/* Grid Tanggal */
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day-cell {
+  height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  background: transparent;
+  border: 1.5px solid transparent;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.calendar-day-cell:hover:not(.empty):not(.selected) {
+  background: #eef8f3;
+  color: var(--primary);
+  font-weight: 700;
+  border-color: #a7d7c5;
+  transform: translateY(-1px);
+}
+
+.calendar-day-cell.other-month {
+  color: #94a3b8;
+  font-weight: 500;
+  opacity: 0.6;
+}
+
+.calendar-day-cell.today:not(.selected) {
+  border-color: var(--accent-gold);
+  background: #fffdf5;
+  color: #007A53;
+  font-weight: 800;
+  box-shadow: 0 0 0 1px rgba(243, 178, 41, 0.4);
+}
+
+.calendar-day-cell.selected {
+  background: linear-gradient(135deg, #007A53 0%, #004d34 100%) !important;
+  color: #ffffff !important;
+  font-weight: 800;
+  border-color: transparent;
+  box-shadow: 0 4px 10px rgba(0, 122, 83, 0.35);
+  transform: scale(1.04);
+}
+
+/* Footer Kalender: Tombol Hari Ini */
+.calendar-footer {
+  margin-top: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1.5px solid #f0fdf4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-today-btn {
+  background: #f0fdf4;
+  border: 1px solid #a7d7c5;
+  color: var(--primary);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.35rem 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.calendar-today-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 122, 83, 0.25);
+}
+
+.calendar-selected-info {
+  font-size: 0.76rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .custom-calendar-popup {
+    min-width: 100%;
+    max-width: 100%;
+    left: 0;
+    right: 0;
+    padding: 0.85rem;
+  }
+  .calendar-day-cell {
+    height: 30px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ==========================================================================
+   DROPDOWN & PILIHAN FORMULIR (JENIS UDZUR, SHIFT DITINGGALKAN, TANGGAL)
+   ========================================================================== */
+select.form-control,
+.form-select-styled {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23007a53' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 1rem center / 1rem !important;
+  border: 1.5px solid #a7d7c5 !important;
+  color: #0b3b2c !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  padding-right: 2.5rem !important;
+  box-shadow: 0 1px 3px rgba(0, 122, 83, 0.06);
+  transition: all var(--transition-fast);
+}
+
+select.form-control:hover,
+.form-select-styled:hover {
+  background-color: #ffffff !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 3px 10px rgba(0, 122, 83, 0.14) !important;
+  transform: translateY(-1px);
+}
+
+select.form-control:focus,
+.form-select-styled:focus {
+  background-color: #ffffff !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3.5px rgba(0, 122, 83, 0.2) !important;
+}
+
+select.form-control option {
+  background-color: #ffffff;
+  color: #1a202c;
+  font-weight: 600;
+  padding: 0.6rem;
+}
+
+/* Date Picker (Tanggal Izin Bergaya Hijau Elegan) */
+input[type="date"].form-control,
+.form-date-styled {
+  background: linear-gradient(180deg, #fbfdfc 0%, #eef8f3 100%) !important;
+  border: 1.5px solid #a7d7c5 !important;
+  color: #0b3b2c !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 122, 83, 0.06);
+  transition: all var(--transition-fast);
+}
+
+input[type="date"].form-control:hover,
+.form-date-styled:hover {
+  background: #ffffff !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 3px 10px rgba(0, 122, 83, 0.14) !important;
+  transform: translateY(-1px);
+}
+
+input[type="date"].form-control:focus,
+.form-date-styled:focus {
+  background: #ffffff !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3.5px rgba(0, 122, 83, 0.2) !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(32%) sepia(85%) saturate(548%) hue-rotate(113deg) brightness(91%) contrast(101%);
+  opacity: 0.85;
+  padding: 0.25rem;
+  transition: transform 0.2s ease;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  transform: scale(1.15);
+  opacity: 1;
+}
+
+.recap-search-input {
+  padding: 0.5rem 1rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  background: linear-gradient(180deg, #fbfdfc 0%, #eef8f3 100%);
+  border: 1.5px solid #a7d7c5;
+  border-radius: var(--radius-sm);
+  outline: none;
+  color: var(--dark);
+  min-width: 250px;
+  transition: all var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(0, 122, 83, 0.05);
+}
+
+.recap-search-input::placeholder {
+  color: #718096;
+  font-size: 0.82rem;
+  font-weight: 400;
+  text-overflow: ellipsis;
+}
+
+.recap-search-input:hover {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0, 122, 83, 0.12);
+}
+
+.recap-search-input:focus {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 122, 83, 0.2);
+}
+
+.btn-export-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(243, 178, 41, 0.6);
+  background: var(--gold-light);
+  color: var(--dark);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-export-action:hover {
+  background: var(--gold);
+  transform: translateY(-1px);
+}
+
+.recap-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  max-width: 960px;
+  margin: 0 auto 1.5rem auto;
+  justify-content: center;
+}
+
+.recap-stat-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  border: 1.5px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.stat-content-wrap,
+.recap-stat-card > div:first-child {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.recap-stat-card .stat-title {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--dark-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recap-stat-card .stat-number {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-top: 0.2rem;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.recap-stat-card .stat-percent {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 0.3rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recap-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.recap-icon-box svg { width: 22px; height: 22px; }
+
+.recap-stat-card.hadir .recap-icon-box {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.recap-stat-card.terlambat .recap-icon-box {
+  background: var(--gold-light);
+  color: var(--gold-dark);
+}
+
+.recap-stat-card.izin .recap-icon-box {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.recap-stat-card.alpha .recap-icon-box {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.recap-table {
+  width: 100%;
+  min-width: 1040px;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+.recap-table th {
+  background: #f8fafc;
+  color: var(--dark-muted);
+  font-weight: 800;
+  font-size: 0.82rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1.5px solid var(--border-color);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+}
+
+.recap-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #edf2f7;
+  color: var(--dark);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.recap-table tr:hover td {
+  background-color: rgba(0, 122, 83, 0.02);
+}
+
+.cell-shift-time {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+
+.cell-shift-time.empty {
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.status-badge-table {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.status-badge-table.hadir,
+.status-badge-table.lengkap {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: 1px solid rgba(0, 122, 83, 0.2);
+}
+
+.status-badge-table.terlambat,
+.status-badge-table.sebagian {
+  background: var(--gold-light);
+  color: var(--gold-dark);
+  border: 1px solid rgba(243, 178, 41, 0.3);
+}
+
+.status-badge-table.izin {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid rgba(2, 132, 199, 0.25);
+}
+
+.status-badge-table.alpha {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+.status-badge-table.libur {
+  background: #f1f5f9;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
+/* Format Khusus Kolom Jam untuk Status Izin (Tanpa Jam) */
+.cell-izin-no-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.badge-no-time {
+  display: inline-block;
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  line-height: 1.3;
+}
+
+.btn-izin-submit {
+  background: #f0f9ff;
+  color: #0284c7;
+  border: 1.5px solid #0284c7;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  width: 100%;
+}
+
+.btn-izin-submit:hover {
+  background: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Mode Cetak */
+@media print {
+  .dash-navbar,
+  .dash-tab-bar,
+  .recap-filter-bar,
+  .btn,
+  .btn-export-action {
+    display: none !important;
+  }
+
+  .dash-page-wrapper { background: #fff !important; }
+  .dash-card { box-shadow: none !important; border: 1px solid #ccc !important; }
+}
+
+/* Footer */
+.login-footer,
+.dash-footer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.78rem;
+}
+
+.dash-footer {
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+  background: var(--white);
+  margin-top: auto;
+}
+
+.toast-box {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--dark);
+  color: var(--white);
+  padding: 1rem 1.4rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all var(--transition-normal);
+  border-left: 4px solid var(--primary);
+  max-width: 90vw;
+}
+
+.toast-box.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.toast-box.toast-success { border-left-color: var(--primary); }
+.toast-box.toast-gold { border-left-color: var(--gold); }
+.toast-box.toast-error { border-left-color: var(--status-absent); }
+
+/* ==========================================================================
+   MODAL BANTUAN & RESET KATA SANDI
+   ========================================================================== */
+.modal-backdrop {
+  display: none !important;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(7, 38, 27, 0.72);
+  backdrop-filter: blur(6px);
+  z-index: 99999;
+  padding: 1.25rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-backdrop.open {
+  display: flex !important;
+  animation: fadeInModal 0.25s ease;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  border: 1.5px solid #a7d7c5;
+  box-shadow: 0 24px 48px rgba(0, 77, 52, 0.35), 0 8px 16px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  animation: modalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 1.35rem 1.75rem;
+  background: linear-gradient(135deg, #004d34 0%, #007A53 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modal-icon-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(243, 178, 41, 0.2);
+  border: 1.5px solid rgba(243, 178, 41, 0.5);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.modal-header h3 {
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.modal-body {
+  padding: 1.75rem;
+}
+
+.modal-body p {
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+}
+
+.contact-card {
+  background: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+  color: #0b3b2c;
+}
+
+.contact-row svg {
+  width: 18px;
+  height: 18px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.modal-close-btn {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  background: linear-gradient(135deg, #007A53 0%, #005a3d 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(0, 122, 83, 0.25);
+}
+
+.modal-close-btn:hover {
+  background: #004d34;
+  box-shadow: 0 6px 16px rgba(0, 122, 83, 0.35);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   MODAL OVERLAY RINCIAN IZIN & UDZUR ASATIDZ (ADMIN REKAP & HARIAN)
+   ========================================================================== */
+.modal-izin-card {
+  max-width: 580px !important;
+  max-height: 88vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: var(--radius-xl) !important;
+  border: 1.5px solid #7dd3fc !important;
+  box-shadow: 0 24px 50px rgba(2, 132, 199, 0.22), 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+}
+
+.modal-izin-header {
+  padding: 1.25rem 1.5rem !important;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.modal-izin-title-wrap h3 {
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+  line-height: 1.25 !important;
+}
+
+.modal-izin-subtitle {
+  font-size: 0.8rem !important;
+  color: #e0f2fe !important;
+  margin: 0.2rem 0 0 0 !important;
+  font-weight: 600 !important;
+}
+
+.modal-close-icon-btn {
+  background: rgba(255, 255, 255, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+  font-size: 1.35rem !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  transition: all var(--transition-fast) !important;
+  flex-shrink: 0 !important;
+}
+
+.modal-close-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: scale(1.06) !important;
+}
+
+.modal-izin-body {
+  padding: 1.25rem !important;
+  overflow-y: auto !important;
+  flex: 1 1 auto !important;
+  max-height: calc(88vh - 135px) !important;
+  background: #f8fafc !important;
+}
+
+.modal-izin-footer {
+  padding: 0.85rem 1.25rem !important;
+  background: #ffffff !important;
+  border-top: 1px solid #e2e8f0 !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 0.5rem !important;
+}
+
+.modal-izin-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.85rem !important;
+}
+
+.izin-detail-item {
+  background: #ffffff !important;
+  border: 1.5px solid #e2e8f0 !important;
+  border-left: 4.5px solid #0284c7 !important;
+  border-radius: 10px !important;
+  padding: 1rem 1.15rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.65rem !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease !important;
+}
+
+.izin-detail-item.border-sakit {
+  border-left-color: #dc2626 !important;
+}
+
+.izin-detail-item:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+}
+
+.izin-detail-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: 0.5rem !important;
+}
+
+.izin-detail-name {
+  font-size: 0.98rem !important;
+  font-weight: 800 !important;
+  color: var(--dark) !important;
+  line-height: 1.25 !important;
+}
+
+.izin-detail-role {
+  font-size: 0.74rem !important;
+  font-weight: 600 !important;
+  color: var(--text-muted) !important;
+  margin-top: 0.15rem !important;
+}
+
+.izin-badge-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  flex-wrap: wrap !important;
+}
+
+.badge-izin-type {
+  display: inline-block !important;
+  padding: 0.2rem 0.55rem !important;
+  border-radius: 6px !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  background: #e0f2fe !important;
+  color: #0369a1 !important;
+  border: 1px solid #bae6fd !important;
+}
+
+.badge-izin-type.sakit {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+  border-color: #fecaca !important;
+}
+
+.badge-izin-timing {
+  display: inline-block !important;
+  padding: 0.2rem 0.55rem !important;
+  border-radius: 6px !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+}
+
+.badge-izin-timing.upcoming {
+  background: #fef3c7 !important;
+  color: #b45309 !important;
+  border: 1px solid #fde68a !important;
+}
+
+.badge-izin-timing.today {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+  border: 1px solid #bbf7d0 !important;
+}
+
+.badge-izin-timing.past {
+  background: #f1f5f9 !important;
+  color: #64748b !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.izin-detail-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 0.5rem 0.75rem !important;
+  background: #f8fafc !important;
+  padding: 0.65rem 0.85rem !important;
+  border-radius: 8px !important;
+  border: 1px solid #f1f5f9 !important;
+}
+
+@media (max-width: 480px) {
+  .izin-detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.4rem !important;
+  }
+}
+
+.izin-grid-row {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.izin-grid-label {
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  color: var(--text-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+}
+
+.izin-grid-val {
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  color: var(--dark) !important;
+  margin-top: 0.1rem !important;
+}
+
+.izin-keterangan-box {
+  background: #f8fafc !important;
+  border: 1px dashed #cbd5e1 !important;
+  border-radius: 8px !important;
+  padding: 0.65rem 0.85rem !important;
+}
+
+.izin-keterangan-title {
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  color: var(--text-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  margin-bottom: 0.2rem !important;
+}
+
+.izin-keterangan-text {
+  font-size: 0.84rem !important;
+  color: #334155 !important;
+  line-height: 1.45 !important;
+}
+
+.izin-detail-bottom {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  font-size: 0.74rem !important;
+  color: var(--text-muted) !important;
+  padding-top: 0.35rem !important;
+  border-top: 1px solid #f1f5f9 !important;
+  flex-wrap: wrap !important;
+  gap: 0.5rem !important;
+}
+
+.izin-wa-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+  padding: 0.35rem 0.75rem !important;
+  background: #25D366 !important;
+  color: #ffffff !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  border-radius: 6px !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+}
+
+.izin-wa-btn:hover {
+  background: #1eb857 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Hover effect pada kartu ringkasan Izin di Rekap Semua Ustadz & Monitor Harian */
+#cardAdminRecapIzin,
+#cardAdminDailyIzin {
+  cursor: pointer !important;
+  position: relative !important;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast) !important;
+}
+
+#cardAdminRecapIzin:hover,
+#cardAdminDailyIzin:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.2) !important;
+  border-color: #7dd3fc !important;
+}
+
+#cardAdminRecapIzin:active,
+#cardAdminDailyIzin:active {
+  transform: translateY(0) !important;
+}
+
+/* ==========================================================================
+   GAYA KHUSUS DASHBOARD ADMINISTRATOR
+   ========================================================================== */
+.badge-role-admin {
+  background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+  color: #ffffff;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin-left: 0.5rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.badge-tab-count {
+  background: #0284c7;
+  color: #ffffff;
+  border-radius: var(--radius-full);
+  padding: 0.15rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  margin-left: 0.4rem;
+  line-height: 1;
+}
+
+.admin-banner {
+  background: linear-gradient(135deg, #07261b 0%, #004d34 60%, #007A53 100%);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 2rem;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  border: 1.5px solid rgba(243, 178, 41, 0.45);
+}
+
+.admin-banner-title h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+  letter-spacing: -0.2px;
+}
+
+.admin-banner-title p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.88rem;
+  max-width: 680px;
+  line-height: 1.45;
+}
+
+.admin-filter-bar {
+  background: #ffffff;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.15rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.admin-filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-filter-row.divider-top {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 0.85rem;
+}
+
+.admin-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-filter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--dark);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Container Filter Tanggal Admin (Desktop: Sejajar / Inline) */
+.admin-date-filter-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.admin-date-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.admin-date-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 1.1rem;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0b3b2c;
+  background: linear-gradient(180deg, #fbfdfc 0%, #eef8f3 100%);
+  border: 1.5px solid #a7d7c5;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(0, 122, 83, 0.08);
+  white-space: nowrap;
+  min-width: 120px;
+  text-align: center;
+}
+
+.admin-date-trigger:hover {
+  background: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0, 122, 83, 0.16);
+  transform: translateY(-1px);
+}
+
+.custom-datepicker-wrapper.open .admin-date-trigger {
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 83, 0.18);
+}
+
+#wrapperAdminDatePicker .custom-calendar-popup {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 9999;
+}
+
+.btn-date-quick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.95rem;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #047857;
+  background: #ecfdf5;
+  border: 1.5px solid #a7d7c5;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-date-quick:hover {
+  background: #047857;
+  color: #ffffff;
+  border-color: #047857;
+  box-shadow: 0 2px 8px rgba(4, 120, 87, 0.25);
+}
+
+.btn-date-quick.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0, 122, 83, 0.3);
+}
+
+/* Kartu Ringkasan Asatidz Desktop (Memanjang Memenuhi Layar, 4 Berjejer, Jarak dari Banner) */
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1.25rem;
+  margin-top: 1.75rem !important;
+  margin-bottom: 1.5rem !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.admin-stats-grid .recap-stat-card {
+  padding: 1.35rem 1.6rem !important;
+  border-radius: var(--radius-lg) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  text-align: left !important;
+  min-height: 110px !important;
+  aspect-ratio: auto !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.admin-stats-grid .recap-stat-card .stat-content {
+  width: 100%;
+}
+
+.admin-stats-grid .recap-stat-card .stat-title {
+  font-size: 0.82rem !important;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 0.4rem;
+  text-align: left !important;
+}
+
+.admin-stats-grid .recap-stat-card .stat-number {
+  font-size: 1.75rem !important;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 0.3rem;
+  text-align: left !important;
+  line-height: 1.2;
+}
+
+.admin-stats-grid .recap-stat-card .stat-percent {
+  font-size: 0.82rem !important;
+  font-weight: 700;
+  text-align: left !important;
+}
+
+/* Header Judul Rekapitulasi Seluruh Asatidz Admin (Desktop: Sejajar Sebaris) */
+.admin-recap-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--dark);
+  flex-wrap: wrap;
+}
+
+.admin-recap-header-title .recap-title-sep {
+  display: inline;
+  color: var(--dark-muted);
+}
+
+.admin-recap-header-title .recap-title-sub {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.badge-month-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-full);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--dark-muted);
+}
+
+.badge-table-sync {
+  font-size: 0.8rem;
+  color: var(--primary);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #eef8f3;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+  border: 1px solid #c2e5d6;
+}
+
+.status-badge-table.mendatang {
+  background: #f1f5f9;
+  color: #64748b;
+  border-color: #cbd5e1;
+}
+
+.filter-pill-btn {
+  padding: 0.38rem 0.85rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  background: var(--bg-page);
+  color: var(--dark-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.filter-pill-btn:hover {
+  background: #eef8f3;
+  color: var(--primary);
+  border-color: #a7d7c5;
+}
+
+.filter-pill-btn.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0, 122, 83, 0.25);
+}
+
+.admin-search-input {
+  padding: 0.45rem 1rem;
+  font-size: 0.84rem;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-full);
+  outline: none;
+  width: 270px;
+  background: #fafbfc;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.admin-search-input::placeholder {
+  color: #718096;
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+}
+
+.admin-search-input:focus {
+  border-color: var(--primary);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 83, 0.15);
+  width: 300px;
+}
+
+/* User Avatar Inisial */
+.user-avatar-initials {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007A53 0%, #004d34 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 122, 83, 0.2);
+}
+
+/* Header Direktori Data Asatidz Desktop (Jarak Lebih Lapang & Nyaman, Diturunkan dari Banner) */
+.admin-directory-header {
+  margin-top: 3.5rem;
+  margin-bottom: 2rem;
+}
+
+.admin-directory-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 0.35rem;
+  white-space: nowrap;
+}
+
+.admin-directory-subtitle {
+  font-size: 0.85rem;
+  color: var(--dark-muted);
+  white-space: nowrap;
+}
+
+/* Banner Kode Registrasi Lembaga Resmi */
+.admin-passcode-banner {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.admin-passcode-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.passcode-label {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #166534;
+}
+
+.passcode-code-badge {
+  background: #15803d;
+  color: #ffffff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  box-shadow: 0 1px 3px rgba(21, 128, 61, 0.3);
+}
+
+.passcode-hint {
+  font-size: 0.78rem;
+  color: #166534;
+}
+
+/* Direktori Card Asatidz */
+.admin-asatidz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.asatidz-card {
+  background: #ffffff;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.35rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.asatidz-card:hover {
+  border-color: #a7d7c5;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Jaminan Mutlak: Tanpa Foto Profil / Avatar / Ikon Apapun pada Kartu */
+.asatidz-card .user-avatar-initials,
+.asatidz-card img,
+.asatidz-card svg {
+  display: none !important;
+}
+
+.asatidz-card-top,
+.asatidz-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  margin-bottom: 0.85rem;
+  white-space: nowrap;
+}
+
+.asatidz-card-name {
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: var(--dark);
+  white-space: nowrap;
+}
+
+.asatidz-card-role {
+  font-size: 0.78rem;
+  color: var(--primary);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.asatidz-card-body {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 0.85rem;
+  font-size: 0.84rem;
+  color: var(--dark-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.asatidz-card-field {
+  display: flex;
+  align-items: center;
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+
+.asatidz-card-field .field-label {
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.asatidz-card-field .colon {
+  display: inline;
+  margin-right: 0.35rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.asatidz-card-field .field-value {
+  color: var(--dark-muted);
+}
+
+.asatidz-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.asatidz-card-meta span {
+  white-space: nowrap;
+}
+
+.asatidz-card-footer {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.asatidz-card-username {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.asatidz-card-meta svg {
+  width: 15px;
+  height: 15px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   DESAIN RESPONSIF MOBILE TINGKAT TINGGI (SMARTPHONE & TABLET)
+   Dioptimalkan untuk Layar Sentuh, Proporsional, Rapi & Sangat Enak Dilihat
+   ========================================================================== */
+
+/* ==========================================================================
+   DESAIN RESPONSIF MOBILE TINGKAT TINGGI (SMARTPHONE & TABLET)
+   SEMUA ELEMEN CENTERED, PROPORSIONAL, ANTI-OVERFLOW, RAPI & INDAH
+   ========================================================================== */
+
+/* Tablet & Layar Menengah (<= 992px) */
+@media (max-width: 992px) {
+  .login-card-wrapper {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 1.5rem auto;
+  }
+
+  .brand-panel {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  .brand-features { display: none; }
+  .form-panel { padding: 2rem 1.5rem; text-align: center; }
+
+  .login-topbar,
+  .login-footer,
+  .dash-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .today-status-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.45rem;
+  }
+
+  .shift-radio-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .recap-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+  }
+
+  .dash-nav-container {
+    flex-direction: column;
+    gap: 0.65rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  .dash-nav-right {
+    width: 100%;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+}
+
+/* Smartphone & Layar Kecil (<= 768px) - VERSI SERBA CENTER, ELEGAN & SEIMBANG */
+@media (max-width: 768px) {
+  html, body {
+    font-size: 14px;
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box !important;
+  }
+
+  /* 1. Header & Topbar Login (Center Penuh) */
+  .login-viewport {
+    padding: 1.25rem 0.85rem !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 0.75rem !important;
+  }
+
+  .login-topbar {
+    width: 100% !important;
+    max-width: 440px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 0.45rem !important;
+    padding: 0 !important;
+  }
+
+  .topbar-badge,
+  .system-status-indicator {
+    margin: 0 auto !important;
+    font-size: 0.74rem !important;
+    padding: 0.25rem 0.75rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .topbar-clock,
+  .live-time-wrapper {
+    margin: 0 auto !important;
+    font-size: 0.74rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /* 2. Kartu Login & Register (Center Penuh & Proporsional) */
+  .login-card-wrapper {
+    width: 100% !important;
+    max-width: 440px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    box-shadow: 0 12px 36px rgba(0, 70, 46, 0.22) !important;
+  }
+
+  .brand-panel {
+    padding: 1.65rem 1.25rem 1.35rem 1.25rem !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  .brand-panel-top {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .brand-pill {
+    margin: 0 auto 0.75rem auto !important;
+    font-size: 0.7rem !important;
+    padding: 0.22rem 0.65rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .logo-container {
+    text-align: center !important;
+    margin: 0 auto 0.5rem auto !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .logo-frame {
+    margin: 0 auto 0.55rem auto !important;
+    padding: 8px !important;
+    border-radius: 16px !important;
+    display: inline-block !important;
+  }
+
+  .logo-frame img {
+    width: 70px !important;
+    height: auto !important;
+    max-height: 80px !important;
+    margin: 0 auto !important;
+    display: block !important;
+  }
+
+  .brand-title {
+    font-size: 1.15rem !important;
+    line-height: 1.3 !important;
+    text-align: center !important;
+    margin: 0 auto !important;
+    word-break: break-word !important;
+    width: 100% !important;
+    text-transform: uppercase !important;
+  }
+
+  .brand-title .gold-city {
+    font-size: 0.82rem !important;
+    margin-top: 0.2rem !important;
+    text-align: center !important;
+    display: block !important;
+    letter-spacing: 0.1em !important;
+  }
+
+  .brand-arabic {
+    font-size: 1.1rem !important;
+    margin-top: 0.35rem !important;
+    text-align: center !important;
+    line-height: 1.4 !important;
+  }
+
+  .brand-features {
+    display: none !important;
+  }
+
+  .brand-panel-footer {
+    display: none !important;
+  }
+
+  .form-panel {
+    padding: 1.35rem 1.15rem !important;
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  .form-header {
+    text-align: center !important;
+    margin-bottom: 0.85rem !important;
+  }
+
+  .welcome-badge {
+    font-size: 0.7rem !important;
+    padding: 0.2rem 0.55rem !important;
+    margin: 0 auto 0.35rem auto !important;
+    display: inline-block !important;
+  }
+
+  .form-header h2 {
+    font-size: 1.2rem !important;
+    text-align: center !important;
+    margin-bottom: 0.15rem !important;
+  }
+
+  .form-header p {
+    font-size: 0.78rem !important;
+    text-align: center !important;
+  }
+
+  .role-tabs-container {
+    margin-bottom: 0.85rem !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .role-tabs-label {
+    text-align: center !important;
+    margin-bottom: 0.35rem !important;
+    display: block !important;
+    font-size: 0.78rem !important;
+  }
+
+  .role-tabs {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.45rem !important;
+    padding: 4px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  .role-tab {
+    padding: 0.5rem 0.4rem !important;
+    font-size: 0.78rem !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .form-group {
+    margin-bottom: 0.8rem !important;
+    text-align: left !important;
+    width: 100% !important;
+  }
+
+  .form-label {
+    font-size: 0.76rem !important;
+    margin-bottom: 0.25rem !important;
+    display: block !important;
+  }
+
+  .form-control {
+    font-size: 0.86rem !important;
+    padding: 0.6rem 0.75rem 0.6rem 2.25rem !important;
+    border-radius: 8px !important;
+    width: 100% !important;
+  }
+
+  .form-options {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    margin-bottom: 0.8rem !important;
+  }
+
+  .checkbox-label {
+    justify-content: center !important;
+    text-align: center !important;
+    font-size: 0.76rem !important;
+  }
+
+  .btn-primary {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 0.7rem 1.25rem !important;
+    font-size: 0.92rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.45rem !important;
+    border-radius: 8px !important;
+  }
+
+  .auth-switch {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    margin-top: 0.85rem !important;
+    gap: 0.35rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  .login-footer {
+    text-align: center !important;
+    justify-content: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 0.85rem 0.75rem !important;
+    font-size: 0.72rem !important;
+    gap: 0.25rem !important;
+  }
+
+  /* 3. Dashboard Navbar (Center Penuh) */
+  .dash-navbar {
+    border-bottom: 1px solid var(--border-color) !important;
+    width: 100% !important;
+  }
+
+  .dash-nav-container {
+    max-width: 480px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 0.65rem 0.75rem !important;
+    gap: 0.35rem !important;
+  }
+
+  .dash-brand {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 0.25rem !important;
+  }
+
+  .dash-brand-logo {
+    width: 36px !important;
+    height: 36px !important;
+    margin: 0 auto !important;
+    border-radius: 8px !important;
+  }
+
+  .dash-brand-text {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .dash-brand-title-wrap {
+    display: contents !important;
+  }
+
+  .dash-brand-text h1,
+  .dash-brand-text h2 {
+    font-size: 0.9rem !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+    order: 1 !important;
+    margin: 0 !important;
+  }
+
+  .dash-brand-text span:not(.badge-role-admin),
+  .dash-brand-text p {
+    font-size: 0.66rem !important;
+    text-align: center !important;
+    order: 2 !important;
+    margin: 0.15rem 0 0 0 !important;
+  }
+
+  /* Khusus Dashboard Admin: Lencana Administrator di tengah, antara subheadline & indikator waktu */
+  .badge-role-admin {
+    order: 3 !important;
+    margin: 0.35rem auto 0 auto !important;
+    font-size: 0.65rem !important;
+    padding: 0.15rem 0.55rem !important;
+    border-radius: 9999px !important;
+    align-self: center !important;
+    display: inline-flex !important;
+  }
+
+  /* Topbar Bagian Kanan: Indikator Waktu di atas, Profil & Tombol Keluar berdampingan di bawahnya */
+  .dash-nav-right {
+    display: grid !important;
+    grid-template-columns: auto auto !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0.35rem 0.5rem !important;
+    width: 100% !important;
+    border-top: 1px dashed rgba(0, 122, 83, 0.15) !important;
+    padding-top: 0.35rem !important;
+    margin-top: 0.25rem !important;
+  }
+
+  /* Indikator Waktu: Baris 1 tersendiri di tengah */
+  .dash-live-clock-badge {
+    grid-column: 1 / -1 !important;
+    justify-self: center !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    padding: 0.22rem 0.55rem !important;
+    font-size: 0.7rem !important;
+    gap: 0.3rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    margin: 0 auto !important;
+  }
+
+  .dash-live-clock-badge svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  /* Nama Profile / Tulisan Administrator Pusat: Baris 2 Kolom 1 di bawah waktu */
+  .user-profile-simple {
+    grid-column: 1 !important;
+    justify-self: end !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 0.22rem 0.55rem !important;
+    font-size: 0.7rem !important;
+    margin: 0 !important;
+  }
+
+  /* Tombol Keluar: Baris 2 Kolom 2 di sebelah nama profile / tulisan administrator pusat */
+  .btn-logout-nav {
+    grid-column: 2 !important;
+    justify-self: start !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 0.22rem 0.55rem !important;
+    font-size: 0.7rem !important;
+    border-radius: 6px !important;
+    margin: 0 !important;
+  }
+
+  /* 4. Tab Bar (Center Penuh untuk Ustadz, Karosel untuk Admin) */
+  .dash-tab-bar {
+    width: 100% !important;
+  }
+
+  .dash-tab-container {
+    max-width: 480px !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.4rem !important;
+    padding: 0 0.65rem !important;
+  }
+
+  /* Khusus Tab Bar Admin Mobile: Layout sejajar ke samping / Karosel yang bisa digeser */
+  .admin-tab-bar,
+  .dash-tab-bar:has(#tabAdminDaily) {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .admin-tab-bar::-webkit-scrollbar,
+  .dash-tab-bar:has(#tabAdminDaily)::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .admin-tab-container,
+  .dash-tab-bar:has(#tabAdminDaily) .dash-tab-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    justify-content: flex-start !important;
+    gap: 0.45rem !important;
+    padding: 0.4rem 0.65rem !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  .admin-tab-container .nav-tab-btn,
+  .dash-tab-bar:has(#tabAdminDaily) .nav-tab-btn {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    padding: 0.55rem 0.85rem !important;
+    font-size: 0.78rem !important;
+  }
+
+  .nav-tab-btn {
+    padding: 0.5rem 0.35rem !important;
+    font-size: 0.76rem !important;
+    gap: 0.35rem !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /* 5. Kontainer Konten & Banner */
+  .dash-main-container {
+    padding: 0.75rem 0.65rem !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+  }
+
+  .dash-view-panel {
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+
+  .ustadz-banner,
+  .admin-banner {
+    padding: 0.85rem 1rem !important;
+    text-align: center !important;
+    align-items: center !important;
+    justify-content: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.3rem !important;
+    border-radius: 12px !important;
+    margin-bottom: 0.45rem !important;
+    width: 100% !important;
+  }
+
+  .ustadz-banner-title h2,
+  .admin-banner-title h2 {
+    font-size: 0.98rem !important;
+    margin-bottom: 0.15rem !important;
+    text-align: center !important;
+  }
+
+  .ustadz-banner-title p,
+  .admin-banner-title p {
+    font-size: 0.74rem !important;
+    line-height: 1.35 !important;
+    text-align: center !important;
+  }
+
+  .banner-badge-ta {
+    font-size: 0.66rem !important;
+    padding: 0.18rem 0.55rem !important;
+    margin: 0 auto !important;
+  }
+
+  /* 6. Status Kehadiran Hari Ini (3 Kotak Center) */
+  .today-status-container {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.35rem !important;
+    width: 100% !important;
+  }
+
+  .today-status-box {
+    padding: 0.55rem 0.25rem !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 0.15rem !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .status-box-label {
+    font-size: 0.64rem !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+  }
+
+  .status-box-val {
+    font-size: 0.82rem !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+  }
+
+  .status-indicator-badge {
+    font-size: 0.6rem !important;
+    padding: 0.15rem 0.25rem !important;
+    border-radius: 4px !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+    display: block !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .today-detail-row {
+    margin-top: 0.55rem !important;
+    padding: 0.55rem 0.75rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 0.25rem !important;
+    border-radius: 8px !important;
+    width: 100% !important;
+  }
+
+  .today-detail-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 0.45rem !important;
+    font-size: 0.76rem !important;
+  }
+
+  /* 7. Shift Radio (2x2 Grid Center) */
+  .shift-radio-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.45rem !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  .shift-radio-card {
+    padding: 0.6rem 0.5rem !important;
+    border-radius: 8px !important;
+    min-height: 42px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 0.45rem !important;
+  }
+
+  .shift-radio-card .icon {
+    font-size: 1.15rem !important;
+    line-height: 1 !important;
+  }
+
+  .shift-radio-card .title {
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+  }
+
+  /* 8. Waktu Presensi & Action Buttons (Center) */
+  .dash-card {
+    border-radius: 12px !important;
+    margin-top: 0.75rem !important;
+    width: 100% !important;
+    overflow: visible !important;
+    position: relative !important;
+  }
+
+  .dash-card-body {
+    padding: 0.85rem 0.85rem !important;
+    overflow: visible !important;
+    position: relative !important;
+  }
+
+  .dash-card-header {
+    padding: 0.7rem 0.85rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 0.25rem !important;
+  }
+
+  .dash-card-header h3 {
+    font-size: 0.88rem !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .badge-hari-ini {
+    margin: 0 auto !important;
+    font-size: 0.7rem !important;
+  }
+
+  .dash-card-body {
+    padding: 0.85rem 0.85rem !important;
+  }
+
+  .autofill-clock-row {
+    padding: 0.6rem 0.75rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    border-radius: 8px !important;
+    gap: 0.25rem !important;
+  }
+
+  .autofill-clock-text {
+    font-size: 1.35rem !important;
+    text-align: center !important;
+    font-weight: 800 !important;
+  }
+
+  .autofill-indicator-pill {
+    font-size: 0.7rem !important;
+    margin: 0 auto !important;
+  }
+
+  /* Tombol Presensi Masuk & Pulang (Center Penuh) */
+  .presence-action-buttons {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.55rem !important;
+    margin-top: 0.85rem !important;
+    width: 100% !important;
+  }
+
+  .presence-action-buttons .btn {
+    width: 100% !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    justify-content: center !important;
+    text-align: center !important;
+    min-height: 42px !important;
+    gap: 0.45rem !important;
+    border-radius: 8px !important;
+  }
+
+  /* 9. Form Grid 2 (1 Kolom Nyaman di HP) */
+  .form-grid-2 {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  /* 10. Kartu Statistik Rekap (3 ke bawah untuk Ustadz, 2x2 Kotak untuk Admin) */
+  #viewRekapBulanan .recap-stats-grid,
+  .recap-stats-grid:not(.admin-stats-grid) {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.55rem !important;
+    width: 100% !important;
+    max-width: 440px !important;
+    margin: 0 auto 0.75rem auto !important;
+  }
+
+  /* Khusus Kartu Ringkasan Asatidz Admin Mobile (Harian: 4 Turun ke Bawah Memanjang, Tinggi Tetap) */
+  #viewAdminDaily .admin-stats-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0.75rem auto !important;
+  }
+
+  #viewAdminDaily .admin-stats-grid .recap-stat-card {
+    aspect-ratio: auto !important;
+    width: 100% !important;
+    padding: 0.65rem 1rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    border-radius: 8px !important;
+    height: 74px !important;
+    min-height: 74px !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  #viewAdminDaily .admin-stats-grid .recap-stat-card .stat-content {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #viewAdminDaily .admin-stats-grid .recap-stat-card .stat-title {
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    margin-bottom: 0.15rem !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    width: 100% !important;
+  }
+
+  #viewAdminDaily .admin-stats-grid .recap-stat-card .stat-number {
+    font-size: 1.15rem !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    margin: 0.1rem 0 !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+  }
+
+  #viewAdminDaily .admin-stats-grid .recap-stat-card .stat-percent {
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    line-height: 1.15 !important;
+    width: 100% !important;
+  }
+
+  /* Khusus Kartu Ringkasan Rekap Semua Ustadz Admin Mobile (Grid 2x2 Memanjang Sedikit, Tinggi Tetap) */
+  #viewAdminRekap .admin-recap-stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0.75rem auto !important;
+  }
+
+  #viewAdminRekap .admin-recap-stats-grid .recap-stat-card {
+    aspect-ratio: auto !important;
+    padding: 0.65rem 0.55rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    border-radius: 8px !important;
+    min-height: 74px !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  #viewAdminRekap .admin-recap-stats-grid .recap-stat-card .stat-content {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #viewAdminRekap .admin-recap-stats-grid .recap-stat-card .stat-title {
+    font-size: 0.7rem !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    margin-bottom: 0.15rem !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
+    width: 100% !important;
+  }
+
+  #viewAdminRekap .admin-recap-stats-grid .recap-stat-card .stat-number {
+    font-size: 1.12rem !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    margin: 0.1rem 0 !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+  }
+
+  #viewAdminRekap .admin-recap-stats-grid .recap-stat-card .stat-percent {
+    font-size: 0.65rem !important;
+    text-align: center !important;
+    white-space: normal !important;
+    line-height: 1.15 !important;
+    width: 100% !important;
+  }
+
+  .recap-stat-card {
+    padding: 0.85rem 1rem !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    min-width: 0 !important;
+  }
+
+  .recap-icon-box {
+    display: none !important;
+  }
+
+  .recap-stat-card .stat-title {
+    font-size: 0.72rem !important;
+    text-align: center !important;
+  }
+
+  .recap-stat-card .stat-number {
+    font-size: 1.25rem !important;
+    margin: 0.2rem 0 !important;
+    text-align: center !important;
+  }
+
+  .recap-stat-card .stat-percent {
+    font-size: 0.68rem !important;
+    text-align: center !important;
+  }
+
+  /* 11. Filter Bar & Kontrol Rekapitulasi (Center) */
+  .recap-filter-bar {
+    padding: 0.75rem 0.75rem !important;
+    border-radius: 10px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 0.55rem !important;
+    width: 100% !important;
+  }
+
+  .recap-quick-buttons {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    gap: 0.35rem !important;
+    text-align: center !important;
+  }
+
+  .recap-periode-label {
+    width: 100% !important;
+    text-align: center !important;
+    margin: 0 !important;
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    display: block !important;
+  }
+
+  .recap-buttons-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.35rem !important;
+    width: 100% !important;
+  }
+
+  .btn-recap-filter {
+    padding: 0.45rem 0.25rem !important;
+    font-size: 0.74rem !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    width: 100% !important;
+  }
+
+  .recap-custom-controls {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.45rem !important;
+    width: 100% !important;
+  }
+
+  .custom-select-trigger,
+  .custom-datepicker-trigger {
+    padding: 0.5rem 0.65rem !important;
+    font-size: 0.76rem !important;
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+  }
+
+  /* Dropdown & Kalender Mobile: Anti-Clipped, Lancar Di-Scroll & Z-Index Tertinggi */
+  .custom-select-wrapper,
+  .custom-datepicker-wrapper,
+  .custom-select-recap {
+    position: relative !important;
+  }
+
+  .custom-select-wrapper.open,
+  .custom-datepicker-wrapper.open,
+  .custom-select-recap.open {
+    z-index: 9999 !important;
+  }
+
+  .custom-select-dropdown {
+    position: absolute !important;
+    top: calc(100% + 4px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+    background: #ffffff !important;
+    border: 1.5px solid #a7d7c5 !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 12px 28px rgba(0, 122, 83, 0.22), 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+    z-index: 10000 !important;
+    padding: 0.35rem !important;
+    box-sizing: border-box !important;
+  }
+
+  .custom-select-wrapper.open-up .custom-select-dropdown,
+  .custom-select-recap.open-up .custom-select-dropdown {
+    top: auto !important;
+    bottom: calc(100% + 4px) !important;
+    box-shadow: 0 -12px 28px rgba(0, 122, 83, 0.22), 0 -4px 10px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .custom-option {
+    padding: 0.65rem 0.75rem !important;
+    font-size: 0.82rem !important;
+    min-height: 38px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+    touch-action: manipulation !important;
+    cursor: pointer !important;
+  }
+
+  .custom-calendar-popup {
+    position: absolute !important;
+    top: calc(100% + 4px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 310px !important;
+    min-width: 270px !important;
+    max-height: 340px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+    background: #ffffff !important;
+    border: 1.5px solid #a7d7c5 !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 0 14px 32px rgba(0, 122, 83, 0.22), 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    z-index: 10000 !important;
+    padding: 0.75rem 0.85rem !important;
+    box-sizing: border-box !important;
+  }
+
+  .custom-datepicker-wrapper.open-up .custom-calendar-popup {
+    top: auto !important;
+    bottom: calc(100% + 4px) !important;
+    transform: translateX(-50%) !important;
+    box-shadow: 0 -14px 32px rgba(0, 122, 83, 0.22), 0 -4px 12px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .recap-search-input {
+    width: 100% !important;
+    padding: 0.5rem 0.65rem !important;
+    font-size: 0.76rem !important;
+    text-align: center !important;
+  }
+
+  .btn-export-action {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 0.6rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 8px !important;
+  }
+
+  /* Kontrol Export Cetak & Unduh PDF Rekap Admin & Ustadz Mobile: Kanan Kiri (2 Kolom Sejajar) */
+  .recap-custom-controls .btn-export-action {
+    grid-column: auto !important;
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 0.5rem 0.25rem !important;
+    font-size: 0.74rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* Judul Rekapitulasi Admin Mobile: Judul di Atas, Nama Bulan di Bawah */
+  .admin-recap-header-title {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 0.2rem !important;
+    width: 100% !important;
+  }
+
+  .admin-recap-header-title .recap-title-sep {
+    display: none !important;
+  }
+
+  .admin-recap-header-title .recap-title-main {
+    font-size: 0.92rem !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    display: block !important;
+  }
+
+  .admin-recap-header-title .recap-title-sub {
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    color: var(--primary) !important;
+    text-align: center !important;
+    display: block !important;
+  }
+
+  /* 12. Filter Bar Admin (Center & Tata Letak Baru Mobile) */
+  .admin-filter-bar {
+    padding: 0.75rem 0.75rem !important;
+    border-radius: 10px !important;
+    gap: 0.65rem !important;
+    width: 100% !important;
+  }
+
+  .admin-filter-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 0.45rem !important;
+    width: 100% !important;
+  }
+
+  .admin-date-filter-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    gap: 0.45rem !important;
+  }
+
+  .admin-date-filter-container .admin-filter-label {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+    margin-bottom: 0.15rem !important;
+    font-size: 0.82rem !important;
+  }
+
+  .admin-date-controls-group {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 0.35rem !important;
+    position: relative !important;
+  }
+
+  .admin-date-controls-group #wrapperAdminDatePicker {
+    flex: 1.3 !important;
+    position: static !important;
+  }
+
+  .admin-date-controls-group .admin-date-trigger {
+    width: 100% !important;
+    padding: 0.45rem 0.4rem !important;
+    font-size: 0.78rem !important;
+    min-width: 0 !important;
+    text-align: center !important;
+    justify-content: center !important;
+    border-radius: 6px !important;
+  }
+
+  .admin-date-controls-group .btn-date-quick {
+    flex: 1 !important;
+    padding: 0.45rem 0.4rem !important;
+    font-size: 0.76rem !important;
+    text-align: center !important;
+    justify-content: center !important;
+    border-radius: 6px !important;
+  }
+
+  #wrapperAdminDatePicker .custom-calendar-popup {
+    position: absolute !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: 300px !important;
+    max-width: calc(100vw - 2rem) !important;
+    top: calc(100% + 8px) !important;
+    z-index: 10000 !important;
+    box-sizing: border-box !important;
+  }
+
+  .admin-range-badge-wrap {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .badge-month-range {
+    font-size: 0.7rem !important;
+    padding: 0.28rem 0.6rem !important;
+    margin: 0 auto !important;
+  }
+
+  .admin-shift-group {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0.3rem !important;
+    width: 100% !important;
+  }
+
+  .admin-search-group {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .admin-search-input {
+    width: 100% !important;
+    padding: 0.5rem 0.65rem !important;
+    font-size: 0.76rem !important;
+    text-align: center !important;
+  }
+
+  .filter-pill-btn {
+    padding: 0.28rem 0.6rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  /* 13. Tabel Responsif */
+  .table-responsive {
+    border-radius: 10px !important;
+    -webkit-overflow-scrolling: touch !important;
+    box-shadow: inset -5px 0 8px -4px rgba(0, 0, 0, 0.08) !important;
+    width: 100% !important;
+  }
+
+  .recap-table th,
+  .recap-table td {
+    padding: 0.6rem 0.55rem !important;
+    font-size: 0.74rem !important;
+    white-space: nowrap !important;
+  }
+
+  .status-badge-table {
+    padding: 0.2rem 0.45rem !important;
+    font-size: 0.68rem !important;
+  }
+
+  /* 14. Direktori Asatidz (Mobile: Grid 2 Kolom, Ukuran Lebih Kecil, Sisa Ganjil Center) */
+  .admin-directory-header {
+    margin-top: 1.15rem !important;
+    margin-bottom: 1.4rem !important;
+    text-align: center !important;
+  }
+
+  .admin-directory-title {
+    font-size: 1.05rem !important;
+    text-align: center !important;
+    white-space: normal !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .admin-passcode-banner {
+    padding: 0.75rem 0.85rem !important;
+    flex-direction: column !important;
+    text-align: center !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .admin-passcode-info {
+    flex-direction: column !important;
+    gap: 0.35rem !important;
+    text-align: center !important;
+  }
+
+  .admin-directory-subtitle {
+    font-size: 0.78rem !important;
+    text-align: center !important;
+    white-space: normal !important;
+  }
+
+  .admin-asatidz-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+  }
+
+  /* Kartu Asatidz Mobile: Ukuran Lebih Kecil Baik Tinggi Maupun Lebar */
+  .asatidz-card {
+    padding: 0.65rem 0.5rem !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    min-height: auto !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  /* Jika jumlah asatidz ganjil, kartu baris terakhir (sisa satu) posisinya di tengah terus */
+  .admin-asatidz-grid .asatidz-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1 !important;
+    justify-self: center !important;
+    width: calc((100% - 0.5rem) / 2) !important;
+  }
+
+  /* Urutan Elemen Kartu Mobile:
+     1. nama
+     2. "pengajar ma'had..." (di bawah nama)
+     3. Mata Pelajaran (tanpa tanda titik dua) (di bawah tulisan tadi)
+     4. nama mata pelajaran nya (di bawah tulisan Mata Pelajaran)
+     5. No. WhatsApp (tanpa tanda titik dua) (di bawah mata pelajaran)
+     6. nomor nya (di bawah tulisan No. WhatsApp)
+     7. indikator akun terdaftar (di bawahnya)
+     8. username@... (di bawahnya)
+  */
+  .asatidz-card-top,
+  .asatidz-card-header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 0.12rem !important;
+    margin-bottom: 0.35rem !important;
+    width: 100% !important;
+  }
+
+  .asatidz-card-name {
+    font-size: 0.8rem !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    white-space: normal !important;
+    line-height: 1.2 !important;
+    width: 100% !important;
+  }
+
+  .asatidz-card-role {
+    font-size: 0.66rem !important;
+    font-weight: 700 !important;
+    color: var(--primary) !important;
+    text-align: center !important;
+    white-space: normal !important;
+    line-height: 1.15 !important;
+    width: 100% !important;
+  }
+
+  .asatidz-card-body {
+    border-top: 1px solid #f1f5f9 !important;
+    padding-top: 0.35rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.3rem !important;
+    width: 100% !important;
+  }
+
+  .asatidz-card-field {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 0.08rem !important;
+    width: 100% !important;
+  }
+
+  .asatidz-card-field .colon {
+    display: none !important; /* Hilangkan tanda titik dua (:) pada mobile */
+  }
+
+  .asatidz-card-field .field-label {
+    font-size: 0.64rem !important;
+    font-weight: 800 !important;
+    color: var(--dark) !important;
+    text-align: center !important;
+    line-height: 1.15 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.2px !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .asatidz-card-field .field-value {
+    font-size: 0.72rem !important;
+    color: var(--dark-muted) !important;
+    text-align: center !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .asatidz-card-footer {
+    margin-top: 0.45rem !important;
+    padding-top: 0.35rem !important;
+    border-top: 1px solid #f1f5f9 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.2rem !important;
+    width: 100% !important;
+  }
+
+  .asatidz-card-footer .status-badge-table {
+    font-size: 0.62rem !important;
+    padding: 0.12rem 0.35rem !important;
+    display: inline-block !important;
+    margin: 0 auto !important;
+  }
+
+  .asatidz-card-username,
+  .asatidz-card-footer span:last-child {
+    font-size: 0.64rem !important;
+    color: var(--text-muted) !important;
+    font-family: monospace !important;
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /* 15. Toast Notifikasi Mobile (Center) */
+  .toast-box {
+    left: 1rem !important;
+    right: 1rem !important;
+    bottom: 1rem !important;
+    width: auto !important;
+    max-width: none !important;
+    text-align: center !important;
+    font-size: 0.82rem !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 10px !important;
+  }
+
+  /* Modal Overlay Rincian Izin Mobile */
+  .modal-izin-card {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: 92vh !important;
+    border-radius: var(--radius-lg) !important;
+    margin: 0 !important;
+  }
+
+  .modal-izin-header {
+    padding: 1rem 1.15rem !important;
+  }
+
+  .modal-izin-title-wrap h3 {
+    font-size: 1.05rem !important;
+  }
+
+  .modal-izin-body {
+    padding: 0.85rem !important;
+    max-height: calc(92vh - 120px) !important;
+  }
+
+  .izin-detail-item {
+    padding: 0.85rem 0.95rem !important;
+    gap: 0.5rem !important;
+  }
+
+  /* 16. Footer Mobile (Center Penuh) */
+  .dash-footer,
+  .login-footer {
+    padding: 1.25rem 0.75rem !important;
+    font-size: 0.72rem !important;
+    gap: 0.25rem !important;
+    text-align: center !important;
+    align-items: center !important;
+    justify-content: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+}
+
+/* Smartphone Layar Sangat Kecil (<= 380px) */
+@media (max-width: 380px) {
+  html, body {
+    font-size: 13px;
+  }
+
+  .today-status-container {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.25rem !important;
+  }
+
+  .recap-stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.45rem !important;
+  }
+
+  .recap-custom-controls {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.25rem !important;
+  }
+
+  .shift-radio-row {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.35rem !important;
+  }
+
+  .dash-brand-text h1,
+  .dash-brand-text h2 {
+    font-size: 0.82rem !important;
+  }
+}

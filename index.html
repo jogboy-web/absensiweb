@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Registrasi Presensi | Ma'had Tahfidz Imam 'Ashim Yogyakarta</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpeg">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Amiri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css?v=3.1">
+</head>
+<body>
+
+  <div class="login-viewport">
+    
+    <!-- BARIS ATAS: STATUS SISTEM & JAM DIGITAL REALTIME (TANPA IKON) -->
+    <header class="login-topbar">
+      <div class="topbar-badge">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span>Portal E-Presensi Ma'had Terpadu</span>
+      </div>
+
+      <div class="topbar-clock">
+        <span id="liveDate">Kamis, 22 Oktober 2026</span>
+        <span class="divider"></span>
+        <strong id="liveTime" style="color: var(--gold); font-variant-numeric: tabular-nums;">--:--:-- WIB</strong>
+      </div>
+    </header>
+
+    <!-- KARTU UTAMA AUTHENTICATION -->
+    <main class="login-card-wrapper">
+      
+      <!-- SISI KIRI: IDENTITAS & BRANDING LEMBAGA -->
+      <section class="brand-panel">
+        <div class="brand-panel-top">
+          <div class="brand-pill">
+            <span>Tahun Ajaran 2026/2027</span>
+          </div>
+
+          <div class="logo-container">
+            <div class="logo-frame">
+              <img src="logo-clean.png" onerror="this.onerror=null; this.src='logo.jpeg';" alt="Logo Ma'had Tahfidz Imam 'Ashim Yogyakarta">
+            </div>
+            
+            <h1 class="brand-title">
+              Ma'had Tahfidz Imam 'Ashim
+              <span class="gold-city">— YOGYAKARTA —</span>
+            </h1>
+            <div class="brand-arabic">معهد الإمام عاصم لتحفيظ القرآن</div>
+          </div>
+
+          <!-- POIN LAYANAN PRESENSI (TANPA IKON) -->
+          <div class="brand-features">
+            <div class="feature-item">
+              <span>Presensi Kehadiran Asatidz, Pengajar &amp; Staf</span>
+            </div>
+
+            <div class="feature-item">
+              <span>Manajemen Halaqah Tahfidz &amp; Sholat Berjamaah</span>
+            </div>
+
+            <div class="feature-item">
+              <span>Rekapitulasi Kehadiran &amp; Laporan Realtime</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="brand-panel-footer">
+          <p class="quote">"خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ"</p>
+          <p class="quote-author">"Sebaik-baik kalian adalah orang yang belajar Al-Qur'an dan mengajarkannya." (HR. Al-Bukhari)</p>
+        </div>
+      </section>
+
+      <!-- SISI KANAN: PANEL FORMULIR (LOGIN & BUAT AKUN) -->
+      <section class="form-panel">
+        
+        <!-- ==========================================
+             1. TAMPILAN MASUK (LOGIN VIEW)
+             ========================================== -->
+        <div id="loginView" class="form-view">
+          <header class="form-header">
+            <span class="welcome-badge">Portal Masuk Terpadu</span>
+            <h2>Masuk Dashboard</h2>
+            <p>Silakan pilih peran dan masukkan kredensial akun Anda.</p>
+          </header>
+
+          <!-- PILIHAN PERAN (ROLE SELECTOR: TANPA IKON) -->
+          <div class="role-tabs-container">
+            <span class="role-tabs-label">Masuk Sebagai:</span>
+            <div class="role-tabs" role="tablist">
+              <button type="button" class="role-tab active" data-role="guru" role="tab" aria-selected="true">
+                <span>Ustadz / Guru</span>
+              </button>
+              <button type="button" class="role-tab" data-role="admin" role="tab" aria-selected="false">
+                <span>Administrator</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- FORMULIR MASUK -->
+          <form id="loginForm" autocomplete="on" novalidate>
+            <input type="hidden" id="userRole" name="userRole" value="guru">
+
+            <!-- Input Username -->
+            <div class="form-group">
+              <label for="username" class="form-label">
+                <span id="usernameLabel">Username</span>
+              </label>
+              <div class="input-wrapper">
+                <input 
+                  type="text" 
+                  id="username" 
+                  name="username" 
+                  class="form-control" 
+                  placeholder="Masukkan username" 
+                  autocomplete="username" 
+                  spellcheck="false" 
+                  required
+                >
+              </div>
+            </div>
+
+            <!-- Input Kata Sandi -->
+            <div class="form-group">
+              <label for="password" class="form-label">
+                <span>Kata Sandi (Password)</span>
+                <button type="button" class="forgot-link" onclick="openHelpModal()">Lupa Sandi?</button>
+              </label>
+              <div class="input-wrapper">
+                <input 
+                  type="password" 
+                  id="password" 
+                  name="password" 
+                  class="form-control" 
+                  placeholder="••••••••" 
+                  autocomplete="current-password" 
+                  required
+                >
+                <button 
+                  type="button" 
+                  id="togglePassword" 
+                  class="password-toggle-btn" 
+                  aria-label="Tampilkan kata sandi" 
+                  aria-pressed="false"
+                >
+                  <span>Lihat</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Opsi Ingat Saya -->
+            <div class="form-options">
+              <label class="checkbox-label">
+                <input type="checkbox" id="rememberMe" name="rememberMe" checked>
+                <span>Ingat sesi masuk pada perangkat ini</span>
+              </label>
+            </div>
+
+            <!-- Tombol Masuk -->
+            <button type="submit" class="btn btn-primary">
+              <span>Masuk ke E-Presensi</span>
+            </button>
+          </form>
+
+          <!-- TAUTAN BUAT AKUN BARU (HANYA UNTUK USTADZ/PENGAJAR) -->
+          <div class="auth-switch" id="authSwitchRegisterWrapper">
+            <span>Belum memiliki akun pengajar?</span>
+            <button type="button" class="btn-text-gold" id="btnShowRegister">Buat Akun Baru</button>
+          </div>
+        </div>
+
+        <!-- ==========================================
+             2. TAMPILAN BUAT AKUN (REGISTER VIEW)
+             ========================================== -->
+        <div id="registerView" class="form-view hidden">
+          <header class="form-header">
+            <span class="welcome-badge">Pendaftaran Akun Pengajar</span>
+            <h2>Buat Akun Baru</h2>
+            <p>Registrasi akun asatidz dan pengampu halaqah Ma'had Imam 'Ashim.</p>
+          </header>
+
+          <!-- FORMULIR PENDAFTARAN AKUN -->
+          <form id="registerForm" autocomplete="on" novalidate>
+
+            <!-- Kode Registrasi Lembaga Resmi (Keamanan Akun Asatidz) -->
+            <div class="form-group">
+              <label for="regPasscode" class="form-label">
+                <span>Kode Registrasi Lembaga</span>
+                <span style="font-size: 0.72rem; color: #b45309; font-weight: 700; margin-left: 0.35rem;">*Wajib Dari Pengurus</span>
+              </label>
+              <div class="input-wrapper">
+                <input 
+                  type="text" 
+                  id="regPasscode" 
+                  name="passcode" 
+                  class="form-control" 
+                  placeholder="Masukkan kode rahasia dari pengurus..." 
+                  autocomplete="off" 
+                  spellcheck="false" 
+                  required
+                >
+              </div>
+              <small style="display: block; font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem;">
+                Hanya asatidz resmi Ma'had yang memiliki kode ini. Hubungi admin jika belum menerima kode.
+              </small>
+            </div>
+
+            <!-- Nama Lengkap -->
+            <div class="form-group">
+              <label for="regName" class="form-label">
+                <span>Nama Lengkap &amp; Gelar</span>
+              </label>
+              <div class="input-wrapper">
+                <input 
+                  type="text" 
+                  id="regName" 
+                  name="name" 
+                  class="form-control" 
+                  placeholder="Ust. Muhammad Fauzan, S.Pd" 
+                  autocomplete="name" 
+                  required
+                >
+              </div>
+            </div>
+
+            <!-- Grid 2 Kolom: Username Sistem & Nomor WhatsApp -->
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="regUsername" class="form-label">
+                  <span>Username Akun</span>
+                </label>
+                <div class="input-wrapper">
+                  <input 
+                    type="text" 
+                    id="regUsername" 
+                    name="username" 
+                    class="form-control" 
+                    placeholder="ustadz.fauzan" 
+                    autocomplete="username" 
+                    spellcheck="false" 
+                    required
+                  >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="regPhone" class="form-label">
+                  <span>Nomor WhatsApp</span>
+                </label>
+                <div class="input-wrapper">
+                  <input 
+                    type="tel" 
+                    id="regPhone" 
+                    name="phone" 
+                    class="form-control" 
+                    placeholder="0812-3456-7890" 
+                    autocomplete="tel" 
+                    required
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Jabatan (Kotak Pilihan Custom Bergaya Ma'had) -->
+            <div class="form-group">
+              <label for="regSubject" class="form-label">
+                <span>Jabatan</span>
+              </label>
+              <div class="custom-select-wrapper" id="wrapperJabatan">
+                <button type="button" class="custom-select-trigger" onclick="toggleCustomSelect('wrapperJabatan')">
+                  <span class="trigger-label placeholder">-- Pilih Jabatan --</span>
+                  <svg class="trigger-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </button>
+                <div class="custom-select-dropdown">
+                  <div class="custom-option" data-value="Mudiroh" onclick="selectCustomOption('wrapperJabatan', 'Mudiroh', 'Mudiroh')">
+                    <span>Mudiroh</span>
+                    <span class="option-check">✓</span>
+                  </div>
+                  <div class="custom-option" data-value="Staff Administrasi" onclick="selectCustomOption('wrapperJabatan', 'Staff Administrasi', 'Staff Administrasi')">
+                    <span>Staff Administrasi</span>
+                    <span class="option-check">✓</span>
+                  </div>
+                  <div class="custom-option" data-value="Musyrifah" onclick="selectCustomOption('wrapperJabatan', 'Musyrifah', 'Musyrifah')">
+                    <span>Musyrifah</span>
+                    <span class="option-check">✓</span>
+                  </div>
+                  <div class="custom-option" data-value="Pengajar Tahfidz" onclick="selectCustomOption('wrapperJabatan', 'Pengajar Tahfidz', 'Pengajar Tahfidz')">
+                    <span>Pengajar Tahfidz</span>
+                    <span class="option-check">✓</span>
+                  </div>
+                </div>
+                <input type="hidden" id="regSubject" name="subject" value="">
+              </div>
+            </div>
+
+            <!-- Grid 2 Kolom: Password & Konfirmasi -->
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="regPassword" class="form-label">
+                  <span>Kata Sandi Baru</span>
+                </label>
+                <div class="input-wrapper">
+                  <input 
+                    type="password" 
+                    id="regPassword" 
+                    name="new-password" 
+                    class="form-control" 
+                    placeholder="Min. 8 karakter" 
+                    autocomplete="new-password" 
+                    minlength="8" 
+                    required
+                  >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="regConfirmPassword" class="form-label">
+                  <span>Ulangi Sandi</span>
+                </label>
+                <div class="input-wrapper">
+                  <input 
+                    type="password" 
+                    id="regConfirmPassword" 
+                    name="confirm-password" 
+                    class="form-control" 
+                    placeholder="Ulangi sandi" 
+                    required
+                  >
+                  <button 
+                    type="button" 
+                    id="toggleRegPassword" 
+                    class="password-toggle-btn" 
+                    aria-label="Tampilkan kata sandi" 
+                    aria-pressed="false"
+                  >
+                    <span>Lihat</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pernyataan / Checkbox -->
+            <div class="form-options" style="margin-top: 0.25rem; margin-bottom: 1.25rem;">
+              <label class="checkbox-label">
+                <input type="checkbox" id="regAgreement" required checked>
+                <span>Saya bertugas resmi sebagai Asatidz di Ma'had Imam 'Ashim</span>
+              </label>
+            </div>
+
+            <!-- Tombol Buat Akun -->
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              <span>Daftar Akun Baru</span>
+            </button>
+          </form>
+
+          <!-- TAUTAN KEMBALI KE LOGIN -->
+          <div class="auth-switch">
+            <span>Sudah memiliki akun terdaftar?</span>
+            <button type="button" class="btn-text-gold" id="btnShowLogin">Masuk Sekarang</button>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- FOOTER HALAMAN -->
+    <footer class="login-footer">
+      <div>
+        <span>© 2026 <strong>Ma'had Tahfidz Imam 'Ashim Yogyakarta</strong>. Hak Cipta Dilindungi.</span>
+      </div>
+      <div>
+        <span>Sistem Informasi Absensi v2.4 — Kampus Yogyakarta</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- MODAL BANTUAN & LUPA KATA SANDI -->
+  <div id="helpModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="helpTitle">Bantuan &amp; Reset Kata Sandi</h3>
+      </div>
+      <div class="modal-body">
+        <p>
+          Demi menjaga keamanan data presensi pesantren, pengaturan ulang kata sandi dilakukan secara terverifikasi melalui Bagian Administrasi / Kesantrian Ma'had:
+        </p>
+        <div class="contact-card">
+          <div class="contact-row">
+            <span><strong>Layanan Hotline:</strong> (0274) 555-ASHIM</span>
+          </div>
+          <div class="contact-row">
+            <span><strong>Email SIM:</strong> kesantrian@imamashim.id</span>
+          </div>
+          <div class="contact-row">
+            <span><strong>Kantor:</strong> Gedung Administrasi Lt. 1, Yogyakarta</span>
+          </div>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeHelpModal()">
+          Saya Mengerti, Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFIKASI -->
+  <div id="liveToast" class="toast-box" role="status" aria-live="polite"></div>
+
+  <!-- Database Lokal Mandiri (100% Standalone & Bebas dari Cloud) -->
+  <script src="local-db.js"></script>
+  <script src="script.js?v=3.1"></script>
+</body>
+</html>

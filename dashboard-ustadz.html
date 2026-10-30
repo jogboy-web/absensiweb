@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Ustadz | E-Presensi Ma'had Tahfidz Imam 'Ashim</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpeg">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Amiri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css?v=3.2">
+</head>
+<body class="dash-page-wrapper">
+
+  <!-- ==========================================================================
+       NAVBAR ATAS DASHBOARD USTADZ (TANPA IKON)
+       ========================================================================== -->
+  <nav class="dash-navbar">
+    <div class="dash-nav-container">
+      <a href="dashboard-ustadz.html" class="dash-brand">
+        <div class="dash-brand-logo">
+          <img src="logo-clean.png" onerror="this.onerror=null; this.src='logo.jpeg';" alt="Logo Ma'had Imam 'Ashim">
+        </div>
+        <div class="dash-brand-text">
+          <h1>MA'HAD IMAM 'ASHIM</h1>
+          <span>Portal Presensi Asatidz &amp; Pengajar</span>
+        </div>
+      </a>
+
+      <div class="dash-nav-right">
+        <!-- Jam Digital Realtime -->
+        <div class="dash-live-clock-badge">
+          <span id="navLiveDate">Kamis, 22 Oktober 2026</span>
+          <span class="divider"></span>
+          <strong id="navLiveTime" style="color: var(--primary); font-variant-numeric: tabular-nums;">--:--:-- WIB</strong>
+        </div>
+
+        <!-- Profil Ustadz -->
+        <div class="user-profile-simple">
+          <span id="userDisplayName">Ustadz Fauzan</span>
+        </div>
+
+        <!-- Tombol Keluar -->
+        <a href="index.html" class="btn-logout-nav" title="Keluar dari Portal">
+          <span>Keluar</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==========================================================================
+       TAB BAR MENU (ABSEN HARIAN vs REKAP BULANAN - TANPA IKON)
+       ========================================================================== -->
+  <div class="dash-tab-bar">
+    <div class="dash-tab-container">
+      <button type="button" class="nav-tab-btn active" id="tabBtnHarian" onclick="switchDashboardTab('harian')">
+        <span>Absen Harian</span>
+      </button>
+
+      <button type="button" class="nav-tab-btn" id="tabBtnRekap" onclick="switchDashboardTab('rekap')">
+        <span>Rekap Bulanan</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       KONTAINER UTAMA DASHBOARD
+       ========================================================================== -->
+  <main class="dash-main-container">
+
+    <!-- BANNER SAMBUTAN USTADZ -->
+    <header class="ustadz-banner">
+      <div class="ustadz-banner-title">
+        <h2 id="greetingUstadz">Ahlan wa Sahlan, Ustadz Fauzan!</h2>
+        <p>Silakan lakukan Presensi Masuk saat mulai bertugas dan Presensi Pulang setelah selesai bertugas hari ini.</p>
+      </div>
+      <div class="banner-badge-ta">
+        Tahun Ajaran 2026/2027 Ganjil
+      </div>
+    </header>
+
+    <!-- ========================================================================
+         BAGIAN 1: ABSEN HARIAN (STATUS HARI INI, FORM PRESENSI & FORM IZIN)
+         ======================================================================== -->
+    <section id="viewAbsenHarian" class="dash-view-panel">
+      
+      <!-- KARTU STATUS KEHADIRAN HARI INI -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h3>
+            <span>Status Kehadiran Hari Ini</span>
+          </h3>
+          <span class="badge-hari-ini" id="badgeHariIni">Kamis, 22 Oktober 2026</span>
+        </div>
+
+        <div class="dash-card-body">
+          <div class="today-status-container">
+            
+            <!-- Box 1: Shift Hari Ini -->
+            <div class="today-status-box active-shift-box">
+              <div class="status-box-label">Shift Hari Ini</div>
+              <div class="status-box-val" id="todayShiftName">Shift Siang</div>
+            </div>
+
+            <!-- Box 2: Status Masuk -->
+            <div class="today-status-box">
+              <div class="status-box-label">Status Masuk</div>
+              <div class="status-box-val" id="todayCheckInTime" style="color: var(--text-muted); font-size: 0.84rem;">Belum Check-In</div>
+              <span class="status-indicator-badge centang-masuk" id="todayCheckInBadge" style="display: none;">
+                Sudah Check-In
+              </span>
+            </div>
+
+            <!-- Box 3: Status Pulang -->
+            <div class="today-status-box">
+              <div class="status-box-label">Status Pulang</div>
+              <div class="status-box-val" id="todayCheckOutTime" style="color: var(--text-muted); font-size: 0.84rem;">Belum Check-Out</div>
+              <span class="status-indicator-badge centang-masuk" id="todayCheckOutBadge" style="display: none;">
+                Sudah Check-Out
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Keterangan Catatan Pembelajaran Aktif Hari Ini -->
+          <div class="today-detail-row" id="todayTaskDetailRow">
+            <div class="today-detail-item">
+              <span class="detail-label">Catatan Pembelajaran:</span>
+              <strong id="todayTaskDesc">Halaqah Tahfidz Santri</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULIR INPUT PRESENSI HARIAN -->
+      <div class="dash-card" style="margin-top: 1.5rem;">
+        <div class="dash-card-header">
+          <h3>
+            <span id="formCardTitle">Formulir Presensi Harian Staff dan Pengajar</span>
+          </h3>
+        </div>
+
+        <div class="dash-card-body">
+          <form id="formPresensiHarian" onsubmit="event.preventDefault();">
+            
+            <!-- Pilihan Shift Tugas Hari Ini -->
+            <div style="margin-bottom: 1.25rem;">
+              <label class="form-label">
+                <span>Pilih Shift Tugas Hari Ini:</span>
+              </label>
+              
+              <div class="shift-radio-row">
+                <button type="button" class="shift-radio-card" data-shift="pagi" onclick="selectShiftRadio('pagi')">
+                  <span class="title">Shift Pagi</span>
+                  <span class="shift-status-pill pill-none" id="pillShift_pagi">Belum Presensi</span>
+                </button>
+
+                <button type="button" class="shift-radio-card" data-shift="siang" onclick="selectShiftRadio('siang')">
+                  <span class="title">Shift Siang</span>
+                  <span class="shift-status-pill pill-none" id="pillShift_siang">Belum Presensi</span>
+                </button>
+
+                <button type="button" class="shift-radio-card" data-shift="sore" onclick="selectShiftRadio('sore')">
+                  <span class="title">Shift Sore</span>
+                  <span class="shift-status-pill pill-none" id="pillShift_sore">Belum Presensi</span>
+                </button>
+
+                <button type="button" class="shift-radio-card" data-shift="malam" onclick="selectShiftRadio('malam')">
+                  <span class="title">Shift Malam</span>
+                  <span class="shift-status-pill pill-none" id="pillShift_malam">Belum Presensi</span>
+                </button>
+              </div>
+              <input type="hidden" id="inputSelectedShift" value="">
+            </div>
+
+            <!-- Waktu Presensi Realtime -->
+            <div style="margin-bottom: 1.25rem;">
+              <label class="form-label">
+                <span>Waktu Presensi:</span>
+              </label>
+              <div class="autofill-clock-row">
+                <div>
+                  <div class="autofill-clock-text" id="livePresensiDisplay">--:--:-- WIB</div>
+                  <div style="margin-top: 0.35rem; font-size: 0.86rem; color: var(--text-muted); font-weight: 600;" id="livePresensiDateText">Kamis, 22 Oktober 2026</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Catatan Pembelajaran -->
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+              <label for="inputKegiatan" class="form-label">
+                <span>Catatan Pembelajaran:</span>
+              </label>
+              <div class="input-wrapper">
+                <input 
+                  type="text" 
+                  id="inputKegiatan" 
+                  class="form-control" 
+                  placeholder="Tuliskan catatan pembelajaran / materi / kegiatan..." 
+                  value="Halaqah Tahfidz Santri" 
+                  oninput="syncCatatanPembelajaran()"
+                  required
+                >
+              </div>
+            </div>
+
+            <!-- Tombol Aksi: Presensi Masuk (Kiri) & Presensi Pulang (Kanan) -->
+            <div class="presence-action-buttons">
+              <!-- 1. Tombol Simpan Presensi Masuk (Check-In) -->
+              <button type="button" class="btn btn-primary" id="btnSubmitCheckIn" onclick="handleCheckInAction()">
+                <span>Presensi Masuk</span>
+              </button>
+
+              <!-- 2. Tombol Simpan Presensi Pulang (Check-Out) -->
+              <button type="button" class="btn btn-pulang-action" id="btnSubmitCheckOut" onclick="handleCheckOutAction()">
+                <span>Presensi Pulang</span>
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+      <!-- FORMULIR PENGAJUAN IZIN / SAKIT -->
+      <div class="dash-card" style="margin-top: 1.5rem;">
+        <div class="dash-card-header">
+          <h3>
+            <span>Formulir Pengajuan Izin / Sakit</span>
+          </h3>
+          <span style="font-size: 0.82rem; color: #0284c7; font-weight: 700;">Permohonan Udzur Syar'i</span>
+        </div>
+
+        <div class="dash-card-body">
+          <form id="formPengajuanIzin" onsubmit="handleIzinSubmit(event)">
+            
+            <div class="form-grid-2" style="margin-bottom: 1.25rem;">
+              <!-- Jenis Izin (Kotak Pilihan Custom) -->
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="inputJenisIzin" class="form-label">
+                  <span>Jenis Izin / Udzur:</span>
+                </label>
+                <div class="custom-select-wrapper" id="wrapperJenisIzin">
+                  <button type="button" class="custom-select-trigger" onclick="toggleCustomSelect('wrapperJenisIzin')">
+                    <span class="trigger-label">Izin Syar'i / Keperluan Keluarga</span>
+                  </button>
+                  <div class="custom-select-dropdown">
+                    <div class="custom-option selected" data-value="Izin Syar'i" onclick="selectCustomOption('wrapperJenisIzin', 'Izin Syar\'i', 'Izin Syar\'i / Keperluan Keluarga')">
+                      <span>Izin Syar'i / Keperluan Keluarga</span>
+                    </div>
+                    <div class="custom-option" data-value="Sakit" onclick="selectCustomOption('wrapperJenisIzin', 'Sakit', 'Sakit (Istirahat Medis / Dokter)')">
+                      <span>Sakit (Istirahat Medis / Dokter)</span>
+                    </div>
+                    <div class="custom-option" data-value="Tugas Luar" onclick="selectCustomOption('wrapperJenisIzin', 'Tugas Luar', 'Tugas Lembaga Luar Ma\'had')">
+                      <span>Tugas Lembaga Luar Ma'had</span>
+                    </div>
+                    <div class="custom-option" data-value="Izin Lainnya" onclick="selectCustomOption('wrapperJenisIzin', 'Izin Lainnya', 'Udzur Lainnya')">
+                      <span>Udzur Lainnya</span>
+                    </div>
+                  </div>
+                  <input type="hidden" id="inputJenisIzin" value="Izin Syar'i">
+                </div>
+              </div>
+
+              <!-- Tanggal Izin (Kotak Kalender Custom Bergaya Elegan) -->
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">
+                  <span>Tanggal Izin:</span>
+                </label>
+                <div class="custom-datepicker-wrapper" id="wrapperDatePicker">
+                  <button type="button" class="custom-select-trigger" onclick="toggleCustomDatePicker()">
+                    <span class="trigger-label" id="datepickerDisplayLabel">Kamis, 22 Oktober 2026</span>
+                  </button>
+
+                  <!-- Popup Kalender Kustom -->
+                  <div class="custom-calendar-popup" id="customCalendarPopup">
+                    <div class="calendar-header">
+                      <button type="button" class="calendar-nav-btn" onclick="prevCalendarMonth()" title="Bulan Sebelumnya">&lt;</button>
+                      <div class="calendar-header-title" id="calendarMonthYearText">Oktober 2026</div>
+                      <button type="button" class="calendar-nav-btn" onclick="nextCalendarMonth()" title="Bulan Berikutnya">&gt;</button>
+                    </div>
+
+                    <div class="calendar-weekdays">
+                      <span class="ahad">Min</span>
+                      <span>Sen</span>
+                      <span>Sel</span>
+                      <span>Rab</span>
+                      <span>Kam</span>
+                      <span class="jumat">Jum</span>
+                      <span>Sab</span>
+                    </div>
+
+                    <div class="calendar-days-grid" id="calendarDaysGrid"></div>
+
+                    <div class="calendar-footer">
+                      <button type="button" class="calendar-today-btn" onclick="selectCalendarToday()">Pilih Hari Ini</button>
+                      <span class="calendar-selected-info" id="calendarSelectedInfo">22 Okt 2026</span>
+                    </div>
+                  </div>
+
+                  <input type="hidden" id="inputTanggalIzin" value="2026-10-22">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-grid-2" style="margin-bottom: 1.25rem;">
+              <!-- Shift yang Ditinggalkan (Kotak Pilihan Custom) -->
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="inputShiftIzin" class="form-label">
+                  <span>Shift Tugas yang Ditinggalkan:</span>
+                </label>
+                <div class="custom-select-wrapper" id="wrapperShiftIzin">
+                  <button type="button" class="custom-select-trigger" onclick="toggleCustomSelect('wrapperShiftIzin')">
+                    <span class="trigger-label">Seharian Penuh (Semua Shift)</span>
+                  </button>
+                  <div class="custom-select-dropdown">
+                    <div class="custom-option selected" data-value="Seharian Penuh" onclick="selectCustomOption('wrapperShiftIzin', 'Seharian Penuh', 'Seharian Penuh (Semua Shift)')">
+                      <span>Seharian Penuh (Semua Shift)</span>
+                    </div>
+                    <div class="custom-option" data-value="Shift Pagi" onclick="selectCustomOption('wrapperShiftIzin', 'Shift Pagi', 'Shift Pagi')">
+                      <span>Shift Pagi</span>
+                    </div>
+                    <div class="custom-option" data-value="Shift Siang" onclick="selectCustomOption('wrapperShiftIzin', 'Shift Siang', 'Shift Siang')">
+                      <span>Shift Siang</span>
+                    </div>
+                    <div class="custom-option" data-value="Shift Sore" onclick="selectCustomOption('wrapperShiftIzin', 'Shift Sore', 'Shift Sore')">
+                      <span>Shift Sore</span>
+                    </div>
+                    <div class="custom-option" data-value="Shift Malam" onclick="selectCustomOption('wrapperShiftIzin', 'Shift Malam', 'Shift Malam')">
+                      <span>Shift Malam</span>
+                    </div>
+                  </div>
+                  <input type="hidden" id="inputShiftIzin" value="Seharian Penuh">
+                </div>
+              </div>
+
+              <!-- Keterangan / Alasan Izin -->
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="inputKeteranganIzin" class="form-label">
+                  <span>Keterangan / Alasan:</span>
+                </label>
+                <div class="input-wrapper">
+                  <input 
+                    type="text" 
+                    id="inputKeteranganIzin" 
+                    class="form-control" 
+                    placeholder="Tuliskan alasan izin / sakit..." 
+                    required
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Tombol Kirim Permohonan Izin -->
+            <button type="submit" class="btn btn-izin-submit">
+              <span>Kirim Formulir Izin</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================
+         BAGIAN 2: REKAP BULANAN
+         ======================================================================== -->
+    <section id="viewRekapBulanan" class="dash-view-panel hidden">
+      
+      <!-- Filter Bar Rentang Rekapitulasi -->
+      <div class="recap-filter-bar">
+        
+        <!-- Tombol Pintas Bulan -->
+        <div class="recap-quick-buttons">
+          <span class="recap-periode-label" style="font-size: 0.82rem; font-weight: 700; color: var(--dark-muted);">Pilih Periode:</span>
+          
+          <div class="recap-buttons-row">
+            <button type="button" class="btn-recap-filter active" id="btnQuickCurrentMonth" onclick="selectQuickMonth(0)">
+              Bulan Ini
+            </button>
+            
+            <button type="button" class="btn-recap-filter" id="btnQuickPrevMonth" onclick="selectQuickMonth(1)">
+              Bulan Lalu
+            </button>
+
+            <button type="button" class="btn-recap-filter" id="btnQuickTwoMonthsAgo" onclick="selectQuickMonth(2)">
+              Agustus
+            </button>
+          </div>
+        </div>
+
+        <!-- Dropdown Bulan & Tahun Kustom + Ekspor -->
+        <div class="recap-custom-controls">
+          
+          <!-- Dropdown Bulan Bergaya Ma'had -->
+          <div class="custom-select-recap" id="wrapperMonth">
+            <button type="button" class="custom-select-trigger" onclick="toggleCustomSelect('wrapperMonth')">
+              <span class="trigger-label">Oktober</span>
+            </button>
+            <div class="custom-select-dropdown">
+              <div class="custom-option selected" data-value="9" onclick="selectCustomOption('wrapperMonth', 9, 'Oktober')">
+                <span>Oktober</span>
+              </div>
+              <div class="custom-option" data-value="8" onclick="selectCustomOption('wrapperMonth', 8, 'September')">
+                <span>September</span>
+              </div>
+              <div class="custom-option" data-value="7" onclick="selectCustomOption('wrapperMonth', 7, 'Agustus')">
+                <span>Agustus</span>
+              </div>
+              <div class="custom-option" data-value="6" onclick="selectCustomOption('wrapperMonth', 6, 'Juli')">
+                <span>Juli</span>
+              </div>
+              <div class="custom-option" data-value="5" onclick="selectCustomOption('wrapperMonth', 5, 'Juni')">
+                <span>Juni</span>
+              </div>
+              <div class="custom-option" data-value="4" onclick="selectCustomOption('wrapperMonth', 4, 'Mei')">
+                <span>Mei</span>
+              </div>
+              <div class="custom-option" data-value="3" onclick="selectCustomOption('wrapperMonth', 3, 'April')">
+                <span>April</span>
+              </div>
+              <div class="custom-option" data-value="2" onclick="selectCustomOption('wrapperMonth', 2, 'Maret')">
+                <span>Maret</span>
+              </div>
+              <div class="custom-option" data-value="1" onclick="selectCustomOption('wrapperMonth', 1, 'Februari')">
+                <span>Februari</span>
+              </div>
+              <div class="custom-option" data-value="0" onclick="selectCustomOption('wrapperMonth', 0, 'Januari')">
+                <span>Januari</span>
+              </div>
+            </div>
+            <input type="hidden" id="selectMonth" value="9">
+          </div>
+
+          <!-- Dropdown Tahun Bergaya Ma'had -->
+          <div class="custom-select-recap" id="wrapperYear">
+            <button type="button" class="custom-select-trigger" onclick="toggleCustomSelect('wrapperYear')">
+              <span class="trigger-label">2026</span>
+            </button>
+            <div class="custom-select-dropdown">
+              <div class="custom-option selected" data-value="2026" onclick="selectCustomOption('wrapperYear', 2026, '2026')">
+                <span>2026</span>
+              </div>
+              <div class="custom-option" data-value="2025" onclick="selectCustomOption('wrapperYear', 2025, '2025')">
+                <span>2025</span>
+              </div>
+            </div>
+            <input type="hidden" id="selectYear" value="2026">
+          </div>
+
+          <!-- Tombol Unduh Format PDF -->
+          <button type="button" class="btn-export-action" onclick="window.print()" title="Unduh dan Cetak Format PDF">
+            <span>Unduh PDF</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Kartu Ringkasan Metrik Rekapitulasi (Bersih & Tanpa Terlambat) -->
+      <div class="recap-stats-grid">
+        
+        <div class="recap-stat-card hadir">
+          <div class="stat-content-wrap">
+            <div class="stat-title">Presensi Hadir</div>
+            <div class="stat-number" id="statHadirCount">0 Hari</div>
+            <div class="stat-percent" id="statHadirPercent" style="color: var(--primary);">Kehadiran Tercatat</div>
+          </div>
+        </div>
+
+        <div class="recap-stat-card izin">
+          <div class="stat-content-wrap">
+            <div class="stat-title">Izin / Sakit Resmi</div>
+            <div class="stat-number" id="statIzinCount">0 Hari</div>
+            <div class="stat-percent" style="color: #0284c7;" id="statIzinDesc">Udzur Syar'i Terkonfirmasi</div>
+          </div>
+        </div>
+
+        <div class="recap-stat-card hadir" style="border-left-color: #6366f1;">
+          <div class="stat-content-wrap">
+            <div class="stat-title">Total Log Sesi</div>
+            <div class="stat-number" id="statTotalLogCount">0 Sesi</div>
+            <div class="stat-percent" style="color: #6366f1;">Bulan Berjalan</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tabel Detail Riwayat Absensi Bulanan -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h3 id="tableHeaderTitle">
+            <span>Rincian Rekap Presensi Bulan Oktober 2026</span>
+          </h3>
+          
+          <!-- Pencarian Dalam Tabel -->
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <input 
+              type="text" 
+              id="recapSearchInput" 
+              class="recap-search-input" 
+              placeholder="Cari tanggal, status, shift..." 
+              oninput="filterRecapTable()"
+            >
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="recap-table" id="recapTable">
+            <thead>
+              <tr>
+                <th>Tanggal &amp; Hari</th>
+                <th style="color: var(--primary);">Waktu Shift</th>
+                <th style="color: var(--primary);">Jam Masuk - Jam Keluar</th>
+                <th>Catatan Pembelajaran</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="recapTableBody">
+              <!-- Baris data di-generate secara dinamis oleh script.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER DASHBOARD
+       ========================================================================== -->
+  <footer class="dash-footer">
+    <div>
+      <span>© 2026 <strong>Ma'had Tahfidz Imam 'Ashim Yogyakarta</strong>. Hak Cipta Dilindungi.</span>
+    </div>
+    <div>
+      <span>Sistem Informasi E-Presensi Kehadiran Ustadz &amp; Asatidz — Kampus Yogyakarta</span>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFIKASI -->
+  <div id="liveToast" class="toast-box" role="status" aria-live="polite"></div>
+
+  <!-- Database Lokal Mandiri (100% Standalone & Bebas dari Cloud) -->
+  <script src="local-db.js"></script>
+  <script src="script.js?v=3.2"></script>
+</body>
+</html>
